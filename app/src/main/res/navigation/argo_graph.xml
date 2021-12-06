@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/argo_graph"
+    app:startDestination="@id/transportListFragment">
+
+    <fragment
+        android:id="@+id/transportListFragment"
+        android:name="com.example.agrotracker.ui.transport_list.TransportListFragment"
+        android:label="TransportListFragment">
+        <action
+            android:id="@+id/action_transportList_to_transportDetails"
+            app:destination="@id/transportDetailsFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/transportDetailsFragment"
+        android:name="com.example.agrotracker.ui.transport_details.TransportDetailsFragment"
+        android:label="TransportDetailsFragment">
+        <argument
+            android:name="transport"
+            app:argType="com.example.data.models.Transport" />
+        <action
+            android:id="@+id/action_transportDetails_to_addSeal"
+            app:destination="@id/addSealFragment"
+            app:enterAnim="@animator/nav_default_enter_anim"
+            app:exitAnim="@animator/nav_default_exit_anim"
+            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
+            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+    </fragment>
+    <fragment
+        android:id="@+id/addSealFragment"
+        android:name="com.example.agrotracker.ui.add_seal.AddSealFragment"
+        android:label="AddSealFragment" />
+</navigation>

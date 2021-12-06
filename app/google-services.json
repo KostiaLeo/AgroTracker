@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "113098182185",
+    "project_id": "agrotracker-7c523",
+    "storage_bucket": "agrotracker-7c523.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113098182185:android:3fa237e4d19f2bf8235638",
+        "android_client_info": {
+          "package_name": "com.example.agrotracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113098182185-lsq7dn9k74ml7mfu3mb12meeoq7c32ao.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHq5cOBsPrbiS4NWcHzcNN1Z2RtupzMoA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113098182185-lsq7dn9k74ml7mfu3mb12meeoq7c32ao.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
