@@ -14,7 +14,4 @@ import dagger.hilt.android.components.FragmentComponent
 abstract class FragmentModule {
     @Binds
     abstract fun bindPhotoTaker(localPhotoTaker: LocalPhotoTaker): PhotoTaker
-
-    @Binds
-    abstract fun bindSealNumberRecognizer(offlineSealNumberRecognizer: OfflineSealNumberRecognizer): SealNumberRecognizer
 }

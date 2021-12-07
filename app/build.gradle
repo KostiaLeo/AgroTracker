@@ -80,9 +80,10 @@ dependencies {
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
 
-    // Hilt ViewModel extension
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hilt_jetpack_version"
+
     kapt "androidx.hilt:hilt-compiler:$hilt_jetpack_version"
+    implementation 'androidx.hilt:hilt-work:1.0.0'
 
     implementation 'com.github.bumptech.glide:glide:4.12.0'
 

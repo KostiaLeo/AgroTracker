@@ -1,5 +1,6 @@
 package com.example.agrotracker.ui.transport_details
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

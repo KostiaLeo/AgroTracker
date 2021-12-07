@@ -1,5 +1,6 @@
 package com.example.data.models
 
+import android.net.Uri
 import android.os.Parcelable
 import androidx.recyclerview.widget.DiffUtil
 import kotlinx.android.parcel.Parcelize
@@ -32,7 +33,7 @@ data class Fact(
 
 data class Seal(
     val sealNumber: String,
-    val imageUrl: String? = null
+    val imageUri: String? = null
 ) {
     class SealDiffUtil : DiffUtil.ItemCallback<Seal>() {
         override fun areItemsTheSame(oldItem: Seal, newItem: Seal): Boolean {

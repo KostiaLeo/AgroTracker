@@ -1,5 +1,6 @@
 package com.example.agrotracker.ui.transport_details
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentTransportDetailsBinding
 import com.example.agrotracker.ui.transport_details.seals_adapter.SealsAdapter
+import com.example.agrotracker.utils.ResultKeys
 import com.example.data.models.Transport
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -40,9 +42,9 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
 
     private fun initViews() {
         binding.addSeal.setOnClickListener {
-            setFragmentResultListener("add_seal") { _, bundle ->
-                val sealNumber = bundle.getString("sealNumber")!!
-                val imageUri = bundle.getString("imageUri")
+            setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
+                val sealNumber = bundle.getString(ResultKeys.SEAL_NUMBER)!!
+                val imageUri = bundle.getString(ResultKeys.SEAL_URI)
                 viewModel.addSeal(sealNumber, imageUri)
             }
             findNavController().navigate(
