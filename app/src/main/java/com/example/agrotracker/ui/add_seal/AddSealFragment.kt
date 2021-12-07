@@ -1,5 +1,6 @@
 package com.example.agrotracker.ui.add_seal
 
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.view.LayoutInflater
@@ -7,12 +8,21 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.agrotracker.databinding.FragmentAddSealBinding
+import com.example.data.utils.await
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.TextRecognition
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -41,7 +51,7 @@ class AddSealFragment : Fragment() {
         takePhotoLauncher.launch(uri)
     }
 
-    private var currentImagePath: String? = null
+    private lateinit var currentImageUri: Uri
 
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
@@ -51,13 +61,22 @@ class AddSealFragment : Fragment() {
             ".jpg",
             storageDir
         ).apply {
-            currentImagePath = absolutePath
+            currentImageUri = toUri()
         }
     }
 
 
+    private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
+
     private fun proceedPhoto() {
-        binding.path.text = currentImagePath
+        lifecycleScope.launch {
+            val visionText = withContext(Dispatchers.Default) {
+                val image = InputImage.fromFilePath(requireContext(), currentImageUri)
+                recognizer.process(image).await()
+            }
+
+            binding.sealIdInput.setText(visionText.text)
+        }
     }
 
     private fun askToRetakePhoto() {
