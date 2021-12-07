@@ -1,6 +1,5 @@
 package com.example.agrotracker.ui.transport_details
 
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
@@ -34,6 +33,7 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
         bindTransport(args.transport)
+
         viewModel.sealsLiveData.observe(this) { seals ->
             sealsAdapter.submitList(seals)
         }
@@ -43,9 +43,10 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     private fun initViews() {
         binding.addSeal.setOnClickListener {
             setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
-                val sealNumber = bundle.getString(ResultKeys.SEAL_NUMBER)!!
-                val imageUri = bundle.getString(ResultKeys.SEAL_URI)
-                viewModel.addSeal(sealNumber, imageUri)
+                val sealNumber =
+                    bundle.getString(ResultKeys.SEAL_NUMBER) ?: return@setFragmentResultListener
+                val sealPhotoName = bundle.getString(ResultKeys.SEAL_PHOTO_NAME)
+                viewModel.addSeal(sealNumber, sealPhotoName)
             }
             findNavController().navigate(
                 TransportDetailsFragmentDirections.actionTransportDetailsToAddSeal()

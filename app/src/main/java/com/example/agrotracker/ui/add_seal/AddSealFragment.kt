@@ -77,7 +77,7 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             ResultKeys.CODE_ADD_SEAL,
             bundleOf(
                 ResultKeys.SEAL_NUMBER to binding.sealNumberInput.text.toString(),
-                ResultKeys.SEAL_URI to photoUri?.toString()
+                ResultKeys.SEAL_PHOTO_NAME to photoUri?.lastPathSegment
             )
         )
     }

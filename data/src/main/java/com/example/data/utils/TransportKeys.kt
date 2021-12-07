@@ -8,5 +8,4 @@ object TransportKeys {
     const val DRIVER_DATA = "driverData"
     const val TRAILER_NUMBER = "trailerNumber"
     const val IN_PROCESS = "inProcess"
-    const val TRANSPORT_ID = "transportId"
 }

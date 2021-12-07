@@ -2,23 +2,24 @@ package com.example.data.worker
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.net.Uri
+import android.os.Environment
 import android.util.Log
+import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.data.utils.SharedPreferencesKeys
 import com.example.data.utils.await
-import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import java.lang.Exception
+import java.io.File
 
 @HiltWorker
 class UploadDataWorker @AssistedInject constructor(
@@ -53,16 +54,16 @@ class UploadDataWorker @AssistedInject constructor(
     private suspend fun uploadPhotos() {
         val set =
             sharedPreferences.getStringSet(SharedPreferencesKeys.PHOTOS_SET, emptySet()).orEmpty()
+                .toMutableSet()
         val reference = Firebase.storage.reference
 
         coroutineScope {
-            set.forEach {
-                val uri = it.toUri()
+            set.forEach { fileName ->
+                val uri = buildUriToImageFile(fileName)
                 launch {
-                Log.d(TAG, "uploading photo: $it")
                     try {
-                        reference.child(it).putFile(uri).await()
-
+                        reference.child(fileName).putFile(uri).await()
+                        set.remove(fileName)
                     } catch (e: Exception) {
                         Log.e(TAG, "error uploading: ${e.localizedMessage}", e)
                     }
@@ -70,7 +71,14 @@ class UploadDataWorker @AssistedInject constructor(
             }
         }
 
+        sharedPreferences.edit {
+            putStringSet(SharedPreferencesKeys.PHOTOS_SET, set)
+        }
+    }
 
+    private fun buildUriToImageFile(fileName: String): Uri {
+        val storageDir = applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        return File(storageDir, fileName).toUri()
     }
 
     private fun logError(throwable: Throwable) {

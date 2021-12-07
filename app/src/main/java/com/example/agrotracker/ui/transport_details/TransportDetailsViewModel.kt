@@ -1,6 +1,5 @@
 package com.example.agrotracker.ui.transport_details
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,8 +23,8 @@ class TransportDetailsViewModel @Inject constructor(
 
     private val seals = mutableListOf<Seal>()
 
-    fun addSeal(sealNumber: String, imageUri: String?) {
-        seals.add(Seal(sealNumber, imageUri))
+    fun addSeal(sealNumber: String, photoName: String?) {
+        seals.add(Seal(sealNumber, photoName))
         _sealsLiveData.value = seals
     }
 

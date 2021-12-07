@@ -1,24 +1,29 @@
 package com.example.data.worker
 
-import android.content.Context
 import androidx.work.*
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
+interface UploadDataLauncher {
+    fun enqueueWork()
+}
+
 class UploadDataWorkerLauncher @Inject constructor(
-    @ApplicationContext private val appContext: Context
-) {
-    fun enqueueWork() {
-        WorkManager.getInstance(appContext)
-            .enqueue(buildRequest())
+    private val workManager: WorkManager
+) : UploadDataLauncher {
+
+    companion object {
+        private const val BACKOFF_DELAY_MS = 1000L
     }
 
+    override fun enqueueWork() {
+        workManager.enqueue(buildRequest())
+    }
 
     private fun buildRequest(): WorkRequest {
         return OneTimeWorkRequestBuilder<UploadDataWorker>()
             .setConstraints(buildConstraints())
-            .setBackoffCriteria(BackoffPolicy.LINEAR, 1000L, TimeUnit.MILLISECONDS)
+            .setBackoffCriteria(BackoffPolicy.LINEAR, BACKOFF_DELAY_MS, TimeUnit.MILLISECONDS)
             .build()
     }
 

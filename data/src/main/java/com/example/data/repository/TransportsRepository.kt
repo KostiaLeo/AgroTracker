@@ -8,9 +8,7 @@ import com.example.data.models.Fact
 import com.example.data.models.Transport
 import com.example.data.utils.SharedPreferencesKeys
 import com.example.data.utils.TransportKeys.IN_PROCESS
-import com.example.data.worker.UploadDataWorkerLauncher
-import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
+import com.example.data.worker.UploadDataLauncher
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -22,9 +20,10 @@ interface TransportsRepository {
 
 class TransportsRepositoryDefault @Inject constructor(
     private val transportsApi: TransportsApi,
-    private val uploadDataWorkerLauncher: UploadDataWorkerLauncher,
+    private val uploadDataLauncher: UploadDataLauncher,
     private val sharedPreferences: SharedPreferences
 ) : TransportsRepository {
+
     override fun loadTransports(): Flow<List<Transport>> {
         return transportsApi.loadPendingTransports()
             .map { snapshot ->
@@ -32,22 +31,22 @@ class TransportsRepositoryDefault @Inject constructor(
             }
     }
 
-
     override fun submitTransport(fact: Fact) {
         transportsApi.addFact(fact)
         transportsApi.updateTransport(fact.transportId, IN_PROCESS to false)
         addPendingPhotos(fact)
-        uploadDataWorkerLauncher.enqueueWork()
+        uploadDataLauncher.enqueueWork()
     }
 
+
     private fun addPendingPhotos(fact: Fact) {
-        val prevSet = sharedPreferences
+        val photoNamesSet = sharedPreferences
             .getStringSet(SharedPreferencesKeys.PHOTOS_SET, emptySet()).orEmpty().toMutableSet()
 
-        val set = fact.seals.mapNotNullTo(prevSet) { it.imageUri } as Set<String>
+        fact.seals.mapNotNullTo(photoNamesSet) { it.photoName }
 
         sharedPreferences.edit {
-            putStringSet(SharedPreferencesKeys.PHOTOS_SET, set)
+            putStringSet(SharedPreferencesKeys.PHOTOS_SET, photoNamesSet)
         }
     }
 }
