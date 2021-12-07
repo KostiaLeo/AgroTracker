@@ -2,116 +2,87 @@ package com.example.agrotracker.ui.add_seal
 
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import android.view.ViewGroup
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.FileProvider
-import androidx.core.net.toUri
+import android.viewbinding.library.fragment.viewBinding
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
-import com.example.data.utils.await
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.example.agrotracker.helpers.PhotoTaker
+import com.example.agrotracker.helpers.SealNumberRecognizer
+import com.example.agrotracker.utils.ResultKeys
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.io.File
-import java.text.SimpleDateFormat
-import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddSealFragment : Fragment() {
-    private var _binding: FragmentAddSealBinding? = null
-    private val binding get() = _binding!!
+class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
 
-    private val takePhotoLauncher =
-        registerForActivityResult(ActivityResultContracts.TakePicture()) { captured ->
-            if (captured) {
-                proceedPhoto()
-            } else {
-                askToRetakePhoto()
-            }
+    private val binding: FragmentAddSealBinding by viewBinding()
+
+    @Inject
+    lateinit var photoTaker: PhotoTaker
+
+    @Inject
+    lateinit var sealNumberRecognizer: SealNumberRecognizer
+
+    private val photoErrorHandler = CoroutineExceptionHandler { _, throwable ->
+        logError(throwable)
+        askToRetakePhoto()
+    }
+
+    private var photoUri: Uri? = null
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        binding.takePhoto.setOnClickListener {
+            takePhoto()
         }
+
+        binding.submit.setOnClickListener {
+            setResult()
+            findNavController().popBackStack()
+        }
+    }
 
     private fun takePhoto() {
-        val file = createImageFile()
-        val uri = FileProvider.getUriForFile(
-            requireContext(),
-            "com.example.android.fileprovider",
-            file
-        )
-        takePhotoLauncher.launch(uri)
-    }
-
-    private lateinit var currentImageUri: Uri
-
-    private fun createImageFile(): File {
-        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val storageDir = requireContext().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-        return File.createTempFile(
-            "JPEG_${timeStamp}_",
-            ".jpg",
-            storageDir
-        ).apply {
-            currentImageUri = toUri()
-        }
-    }
-
-
-    private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
-
-    private fun proceedPhoto() {
-        lifecycleScope.launch {
-            val visionText = withContext(Dispatchers.Default) {
-                val image = InputImage.fromFilePath(requireContext(), currentImageUri)
-                recognizer.process(image).await()
+        lifecycleScope.launch(photoErrorHandler) {
+            photoTaker.takePhoto()?.let { uri ->
+                proceedPhoto(uri)
             }
-
-            binding.sealIdInput.setText(visionText.text)
         }
+    }
+
+    private suspend fun proceedPhoto(uri: Uri) {
+        val text = sealNumberRecognizer.recognize(uri)
+        binding.sealIdInput.setText(text)
+        photoUri = uri
     }
 
     private fun askToRetakePhoto() {
 
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentAddSealBinding.inflate(inflater, container, false)
-        initViews()
-        return binding.root
-    }
 
-    private fun initViews() {
-        binding.submit.setOnClickListener {
-            setFragmentResult(
-                "add_seal",
-                bundleOf(
-                    "sealNumber" to binding.sealIdInput.text.toString(),
-                    "imageUri" to null
-                )
+    private fun setResult() {
+        setFragmentResult(
+            ResultKeys.CODE_ADD_SEAL,
+            bundleOf(
+                ResultKeys.SEAL_NUMBER to binding.sealIdInput.text.toString(),
+                ResultKeys.SEAL_URI to photoUri
             )
-            findNavController().popBackStack()
-        }
-
-        binding.takePhoto.setOnClickListener {
-            takePhoto()
-        }
+        )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun logError(
+        throwable: Throwable,
+        message: String = "Error: ${throwable.localizedMessage}"
+    ) {
+        Log.e("AddSealFragment", message, throwable)
     }
 }
