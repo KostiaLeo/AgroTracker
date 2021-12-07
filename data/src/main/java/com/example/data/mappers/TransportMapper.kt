@@ -12,9 +12,10 @@ object TransportMapper {
         val driverData =
             documentSnapshot[TransportKeys.DRIVER_DATA] as? String ?: error("Invalid driverData")
         val trailerNumber =
-            documentSnapshot[TransportKeys.TRAILER_NUMBER] as? String ?: error("Invalid driverData")
+            documentSnapshot[TransportKeys.TRAILER_NUMBER] as? String
+                ?: error("Invalid trailerNumber")
         val inProcess =
-            documentSnapshot[TransportKeys.IN_PROCESS] as? Boolean ?: error("Invalid driverData")
+            documentSnapshot[TransportKeys.IN_PROCESS] as? Boolean ?: error("Invalid inProcess")
 
         return Transport(id, inProcess, stateNumber, driverData, trailerNumber)
     }
