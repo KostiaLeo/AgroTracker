@@ -16,7 +16,7 @@
         android:id="@+id/uploading_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="@dimen/item_margin_large"
         android:text="Please wait, your data is being uploaded..."
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/progress_bar"

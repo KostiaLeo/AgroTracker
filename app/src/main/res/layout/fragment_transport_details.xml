@@ -5,14 +5,13 @@
     android:id="@+id/content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp">
+    android:padding="@dimen/default_content_padding">
 
     <TextView
         android:id="@+id/state_number"
+        style="@style/textTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="AB0000BX" />
@@ -21,8 +20,8 @@
         android:id="@+id/driver_data"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:textSize="16sp"
+        android:layout_marginTop="@dimen/default_item_margin"
+        android:textSize="@dimen/text_size_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/state_number"
         tools:text="Иванов Иван Иванычь" />
@@ -32,7 +31,7 @@
         android:id="@+id/trailer_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="@dimen/default_item_margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/driver_data"
         tools:text="Trailer AE1111EA" />
@@ -41,7 +40,7 @@
         android:id="@+id/seals_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="@dimen/item_margin_small"
         android:text="Seals"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/trailer_number"
@@ -51,7 +50,7 @@
         android:id="@+id/seals_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginVertical="4dp"
+        android:layout_marginVertical="@dimen/item_margin_tiny"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"
         app:layout_constrainedHeight="true"
@@ -62,20 +61,16 @@
 
     <Button
         android:id="@+id/add_seal"
-        style="?attr/materialButtonOutlinedStyle"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
+        style="@style/secondaryActionButton"
         android:text="Add seal"
         app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/submit"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:strokeColor="?attr/colorPrimary" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/submit"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
+        style="@style/primaryActionButton"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
