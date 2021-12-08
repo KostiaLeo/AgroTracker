@@ -4,52 +4,70 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="@dimen/default_content_padding">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/state_number"
-        style="@style/textTitle"
-        android:layout_width="wrap_content"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/transport_info_card"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="AB0000BX" />
+        app:cardElevation="4dp"
+        app:cardUseCompatPadding="true"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/driver_data"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_item_margin"
-        android:textSize="@dimen/text_size_medium"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/state_number"
-        tools:text="Иванов Иван Иванычь" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/content_padding_small">
+
+            <TextView
+                android:id="@+id/state_number"
+                style="@style/textTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="AB0000BX" />
+
+            <TextView
+                android:id="@+id/driver_data"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_item_margin"
+                android:textSize="@dimen/text_size_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/state_number"
+                tools:text="Иванов Иван Иванычь" />
 
 
-    <TextView
-        android:id="@+id/trailer_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_item_margin"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/driver_data"
-        tools:text="Trailer AE1111EA" />
+            <TextView
+                android:id="@+id/trailer_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_item_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/driver_data"
+                tools:text="Trailer AE1111EA" />
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/seals_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/item_margin_large"
         android:layout_marginTop="@dimen/item_margin_small"
-        android:text="Seals"
+        android:text="Seals:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/trailer_number"
+        app:layout_constraintTop_toBottomOf="@id/transport_info_card"
         tools:text="Seals:" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/seals_rv"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="@dimen/default_item_margin"
         android:layout_marginVertical="@dimen/item_margin_tiny"
         android:scrollbarAlwaysDrawVerticalTrack="true"
         android:scrollbars="vertical"
@@ -62,6 +80,7 @@
     <Button
         android:id="@+id/add_seal"
         style="@style/secondaryActionButton"
+        android:layout_marginHorizontal="@dimen/default_item_margin"
         android:text="Add seal"
         app:icon="@drawable/ic_add"
         app:layout_constraintBottom_toTopOf="@id/submit"
@@ -71,6 +90,8 @@
     <Button
         android:id="@+id/submit"
         style="@style/primaryActionButton"
+        android:layout_marginHorizontal="@dimen/default_item_margin"
+        android:layout_marginBottom="@dimen/default_item_margin"
         android:text="Submit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -46,8 +46,6 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     }
 
     private fun initViews() {
-        activity?.actionBar?.title = args.transport.stateNumber
-
         binding.addSeal.setOnClickListener {
             findNavController().navigate(
                 TransportDetailsFragmentDirections.actionTransportDetailsToAddSeal()
@@ -67,7 +65,10 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     private fun bindTransport(transport: Transport) {
         binding.stateNumber.text = transport.stateNumber
         binding.driverData.text = transport.driverData
-        binding.trailerNumber.text = transport.trailerNumber
+        binding.trailerNumber.text = buildString {
+            append("Trailer: ")
+            append(transport.trailerNumber)
+        }
     }
 
     private fun observeData() {
