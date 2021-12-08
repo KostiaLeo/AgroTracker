@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -14,6 +15,7 @@ import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
 import com.example.agrotracker.helpers.PhotoTaker
 import com.example.agrotracker.utils.ResultKeys
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -30,6 +32,8 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
 
     private var photoUri: Uri? = null
 
+    private var errorSnackBar: Snackbar? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
@@ -37,8 +41,14 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     }
 
     private fun initViews() {
-        binding.takePhoto.setOnClickListener {
-            takePhoto()
+        binding.capturePhoto.setOnClickListener {
+            errorSnackBar?.dismiss()
+            capturePhoto()
+        }
+
+        binding.pickFromGallery.setOnClickListener {
+            errorSnackBar?.dismiss()
+            pickPhotoFromGallery()
         }
 
         binding.submit.setOnClickListener {
@@ -47,10 +57,18 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         }
     }
 
-    private fun takePhoto() {
+    private fun capturePhoto() {
         lifecycleScope.launch {
-            photoTaker.takePhoto()?.let { uri ->
-                viewModel.proceedPhoto(uri)
+            photoTaker.capturePhoto()?.let { uri ->
+                viewModel.recognizeSealNumber(uri)
+            }
+        }
+    }
+
+    private fun pickPhotoFromGallery() {
+        lifecycleScope.launch {
+            photoTaker.pickFromGallery()?.let { uri ->
+                viewModel.recognizeSealNumber(uri)
             }
         }
     }
@@ -58,14 +76,16 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     private fun setupStateObservers() {
         viewModel.sealNumberRecognitionStateLiveData.observe(this) { state ->
             when (state) {
-                is AddSealState.Success -> {
+                is SealRecognitionState.Success -> {
+                    showContent()
                     binding.sealNumberInput.setText(state.result.number)
                     photoUri = state.result.uri
                 }
-                is AddSealState.Loading -> {
-
+                is SealRecognitionState.Loading -> {
+                    showProgress()
                 }
-                is AddSealState.Error -> {
+                is SealRecognitionState.Error -> {
+                    showContent()
                     askToRetakePhoto()
                 }
             }
@@ -82,8 +102,26 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         )
     }
 
-
     private fun askToRetakePhoto() {
+        errorSnackBar = Snackbar.make(
+            binding.root,
+            "Номер не розпізнано, спробуйте ще",
+            Snackbar.LENGTH_INDEFINITE
+        )
+            .setAction("Take photo") {
+                capturePhoto()
+            }
+        errorSnackBar?.show()
+    }
 
+
+    private fun showContent() {
+        binding.progressBar.isVisible = false
+        binding.content.isVisible = true
+    }
+
+    private fun showProgress() {
+        binding.progressBar.isVisible = true
+        binding.content.isVisible = false
     }
 }

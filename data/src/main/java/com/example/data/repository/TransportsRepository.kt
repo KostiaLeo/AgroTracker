@@ -32,9 +32,9 @@ class TransportsRepositoryDefault @Inject constructor(
     }
 
     override fun submitTransport(fact: Fact) {
+        addPendingPhotos(fact)
         transportsApi.addFact(fact)
         transportsApi.updateTransport(fact.transportId, IN_PROCESS to false)
-        addPendingPhotos(fact)
         uploadDataLauncher.enqueueWork()
     }
 

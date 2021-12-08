@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import androidx.core.content.edit
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -17,8 +18,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.supervisorScope
 import java.io.File
 
 @HiltWorker
@@ -29,22 +31,21 @@ class UploadDataWorker @AssistedInject constructor(
 ) : CoroutineWorker(appContext, workerParams) {
 
     companion object {
-        private const val TAG = "UploadDataWorker"
+        const val TAG = "UploadDataWorker"
     }
 
-    init {
-        Log.d(TAG, "Init worker")
+    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
+        logError(throwable)
     }
 
     override suspend fun doWork(): Result {
-        Log.d(TAG, "start work")
         return kotlin.runCatching {
+
             uploadPhotos()
-            Firebase.firestore.enableNetwork()
-            Firebase.firestore.waitForPendingWrites().await()
+            awaitWritesToFirestore()
+
         }.onFailure(::logError)
             .fold({
-                Log.d(TAG, "success work")
                 Result.success()
             }, {
                 Result.retry()
@@ -52,28 +53,31 @@ class UploadDataWorker @AssistedInject constructor(
     }
 
     private suspend fun uploadPhotos() {
-        val set =
+        val pendingPhotoSet =
             sharedPreferences.getStringSet(SharedPreferencesKeys.PHOTOS_SET, emptySet()).orEmpty()
                 .toMutableSet()
-        val reference = Firebase.storage.reference
 
-        coroutineScope {
-            set.forEach { fileName ->
-                val uri = buildUriToImageFile(fileName)
-                launch {
-                    try {
-                        reference.child(fileName).putFile(uri).await()
-                        set.remove(fileName)
-                    } catch (e: Exception) {
-                        Log.e(TAG, "error uploading: ${e.localizedMessage}", e)
-                    }
+        supervisorScope {
+            pendingPhotoSet.forEach { photoName ->
+                launch(errorHandler) {
+                    uploadPhoto(photoName)
+                    pendingPhotoSet.remove(photoName)
                 }
             }
         }
 
         sharedPreferences.edit {
-            putStringSet(SharedPreferencesKeys.PHOTOS_SET, set)
+            putStringSet(SharedPreferencesKeys.PHOTOS_SET, pendingPhotoSet)
         }
+    }
+
+    private suspend fun uploadPhoto(photoName: String) {
+        val reference = Firebase.storage.reference
+        val uri = buildUriToImageFile(photoName)
+
+        reference.child(photoName).putFile(uri).await()
+
+        uri.toFile().delete()
     }
 
     private fun buildUriToImageFile(fileName: String): Uri {
@@ -81,7 +85,18 @@ class UploadDataWorker @AssistedInject constructor(
         return File(storageDir, fileName).toUri()
     }
 
-    private fun logError(throwable: Throwable) {
-        Log.e(TAG, "Error uploading data: ${throwable.localizedMessage}", throwable)
+
+    private suspend fun awaitWritesToFirestore() {
+        with(Firebase.firestore) {
+            enableNetwork()
+            waitForPendingWrites().await()
+        }
+    }
+
+    private fun logError(
+        throwable: Throwable,
+        message: String = "Error uploading data: ${throwable.localizedMessage}"
+    ) {
+        Log.e(TAG, message, throwable)
     }
 }

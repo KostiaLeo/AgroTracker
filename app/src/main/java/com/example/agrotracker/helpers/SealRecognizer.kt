@@ -2,7 +2,7 @@ package com.example.agrotracker.helpers
 
 import android.content.Context
 import android.net.Uri
-import androidx.fragment.app.Fragment
+import com.example.agrotracker.utils.Regexes.SEAL_NUMBER_REGEX
 import com.example.data.utils.await
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -12,22 +12,31 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-interface SealNumberRecognizer {
-    suspend fun recognize(uri: Uri): String
+interface SealRecognizer {
+    suspend fun recognize(uri: Uri): String?
     fun close()
 }
 
-class OfflineSealNumberRecognizer @Inject constructor(
+class OfflineSealRecognizer @Inject constructor(
     @ApplicationContext private val appContext: Context
-) : SealNumberRecognizer {
+) : SealRecognizer {
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-    override suspend fun recognize(uri: Uri): String = withContext(Dispatchers.Default) {
+
+    override suspend fun recognize(uri: Uri): String? = withContext(Dispatchers.Default) {
         val image = InputImage.fromFilePath(appContext, uri)
         val visionText = recognizer.process(image).await()
-        visionText.text
+
+        val elements =
+            visionText.textBlocks.flatMap { it.lines }.flatMap { it.elements }.map { it.text }
+        elements.find(::isValidNumber)
     }
+
+    private fun isValidNumber(number: String): Boolean {
+        return number.matches(SEAL_NUMBER_REGEX)
+    }
+
 
     override fun close() {
         recognizer.close()

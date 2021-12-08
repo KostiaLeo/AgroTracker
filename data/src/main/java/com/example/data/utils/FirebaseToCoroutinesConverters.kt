@@ -1,8 +1,6 @@
 package com.example.data.utils
 
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentReference
-import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.channels.awaitClose
@@ -17,16 +15,6 @@ fun Query.toSnapshotFlow(): Flow<QuerySnapshot> {
         val registration = addSnapshotListener { snapshot, exception ->
             exception?.let(::error)
             snapshot?.let(::trySend)
-        }
-        awaitClose { registration.remove() }
-    }
-}
-
-fun DocumentReference.toSnapshotFlow(): Flow<DocumentSnapshot> {
-    return callbackFlow {
-        val registration = addSnapshotListener { document, exception ->
-            exception?.let(::error)
-            document?.let(::trySend)
         }
         awaitClose { registration.remove() }
     }

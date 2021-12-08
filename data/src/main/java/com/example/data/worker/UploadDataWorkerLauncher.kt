@@ -23,6 +23,7 @@ class UploadDataWorkerLauncher @Inject constructor(
     private fun buildRequest(): WorkRequest {
         return OneTimeWorkRequestBuilder<UploadDataWorker>()
             .setConstraints(buildConstraints())
+            .addTag(UploadDataWorker.TAG)
             .setBackoffCriteria(BackoffPolicy.LINEAR, BACKOFF_DELAY_MS, TimeUnit.MILLISECONDS)
             .build()
     }

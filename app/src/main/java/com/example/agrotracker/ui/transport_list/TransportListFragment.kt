@@ -3,6 +3,7 @@ package com.example.agrotracker.ui.transport_list
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -31,6 +32,11 @@ class TransportListFragment : Fragment(R.layout.fragment_list_transport) {
 
         viewModel.transportsLiveData.observe(this) { transports ->
             transportsAdapter.submitList(transports)
+        }
+
+        viewModel.pendingUploadsLiveData.observe(this) { isPendingWork ->
+            binding.transportsRv.isVisible = !isPendingWork
+            binding.progressBar.isVisible = isPendingWork
         }
     }
 

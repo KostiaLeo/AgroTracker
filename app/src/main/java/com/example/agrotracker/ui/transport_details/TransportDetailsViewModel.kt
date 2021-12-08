@@ -18,9 +18,6 @@ class TransportDetailsViewModel @Inject constructor(
     private val _sealsLiveData = MutableLiveData<List<Seal>>()
     val sealsLiveData: LiveData<List<Seal>> get() = _sealsLiveData
 
-    private val _errorLiveData = MutableLiveData<Throwable>()
-    val errorLiveData: LiveData<Throwable> get() = _errorLiveData
-
     private val seals = mutableListOf<Seal>()
 
     fun addSeal(sealNumber: String, photoName: String?) {
