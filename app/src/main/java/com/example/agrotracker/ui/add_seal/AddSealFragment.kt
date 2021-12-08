@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import androidx.core.os.bundleOf
+import androidx.core.view.children
 import androidx.core.view.isVisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
@@ -126,12 +127,12 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
 
 
     private fun showContent() {
+        binding.root.children.forEach { it.isVisible = true }
         binding.progressBar.isVisible = false
-        binding.content.isVisible = true
     }
 
     private fun showProgress() {
+        binding.root.children.forEach { it.isVisible = false }
         binding.progressBar.isVisible = true
-        binding.content.isVisible = false
     }
 }

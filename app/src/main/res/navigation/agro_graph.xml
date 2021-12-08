@@ -34,6 +34,7 @@
             app:popEnterAnim="@animator/nav_default_pop_enter_anim"
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </fragment>
+
     <fragment
         tools:layout="@layout/fragment_add_seal"
         android:id="@+id/addSealFragment"

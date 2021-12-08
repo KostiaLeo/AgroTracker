@@ -26,30 +26,29 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
 
     private val args: TransportDetailsFragmentArgs by navArgs()
 
-    private val sealsAdapter = SealsAdapter { seal ->
-
-    }
+    private val sealsAdapter = SealsAdapter()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        setResultListener()
         initViews()
         bindTransport(args.transport)
-
-        viewModel.sealsLiveData.observe(this) { seals ->
-            sealsAdapter.submitList(seals)
-        }
+        observeData()
         findNavController().enableOnBackPressed(true)
+    }
+
+    private fun setResultListener() {
+        setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
+            val sealNumber =
+                bundle.getString(ResultKeys.SEAL_NUMBER) ?: return@setFragmentResultListener
+            val sealPhotoName = bundle.getString(ResultKeys.SEAL_PHOTO_NAME)
+            viewModel.addSeal(sealNumber, sealPhotoName)
+        }
     }
 
     private fun initViews() {
         activity?.actionBar?.title = args.transport.stateNumber
 
         binding.addSeal.setOnClickListener {
-            setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
-                val sealNumber =
-                    bundle.getString(ResultKeys.SEAL_NUMBER) ?: return@setFragmentResultListener
-                val sealPhotoName = bundle.getString(ResultKeys.SEAL_PHOTO_NAME)
-                viewModel.addSeal(sealNumber, sealPhotoName)
-            }
             findNavController().navigate(
                 TransportDetailsFragmentDirections.actionTransportDetailsToAddSeal()
             )
@@ -69,5 +68,11 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
         binding.stateNumber.text = transport.stateNumber
         binding.driverData.text = transport.driverData
         binding.trailerNumber.text = transport.trailerNumber
+    }
+
+    private fun observeData() {
+        viewModel.sealsLiveData.observe(this) { seals ->
+            sealsAdapter.submitList(seals)
+        }
     }
 }

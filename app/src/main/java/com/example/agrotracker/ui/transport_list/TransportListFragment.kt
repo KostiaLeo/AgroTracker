@@ -37,6 +37,7 @@ class TransportListFragment : Fragment(R.layout.fragment_list_transport) {
         viewModel.pendingUploadsLiveData.observe(this) { isPendingWork ->
             binding.transportsRv.isVisible = !isPendingWork
             binding.progressBar.isVisible = isPendingWork
+            binding.uploadingLabel.isVisible = isPendingWork
         }
     }
 
