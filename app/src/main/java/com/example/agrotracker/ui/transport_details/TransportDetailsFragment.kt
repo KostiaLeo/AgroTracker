@@ -1,8 +1,10 @@
 package com.example.agrotracker.ui.transport_details
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
 import android.viewbinding.library.fragment.viewBinding
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
@@ -33,7 +35,7 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
         initViews()
         bindTransport(args.transport)
         observeData()
-        findNavController().enableOnBackPressed(true)
+        handleBackPress()
     }
 
     private fun setResultListener() {
@@ -73,5 +75,27 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
         viewModel.sealsLiveData.observe(this) { seals ->
             sealsAdapter.submitList(seals)
         }
+    }
+
+    private fun handleBackPress() {
+        findNavController().enableOnBackPressed(true)
+
+        activity?.onBackPressedDispatcher?.addCallback {
+            val alert = buildExitConfirmationAlert()
+            alert.show()
+        }
+    }
+
+    private fun buildExitConfirmationAlert(): AlertDialog {
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage(R.string.exit_confirmation)
+            .setCancelable(false)
+            .setPositiveButton(R.string.no) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.yes) { _, _ ->
+                findNavController().popBackStack()
+            }
+        return builder.create()
     }
 }
