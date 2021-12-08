@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/argo_graph"
     app:startDestination="@id/transportListFragment">
 
     <fragment
         android:id="@+id/transportListFragment"
+        tools:layout="@layout/fragment_list_transport"
         android:name="com.example.agrotracker.ui.transport_list.TransportListFragment"
         android:label="TransportListFragment">
         <action
@@ -18,6 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/transportDetailsFragment"
+        tools:layout="@layout/fragment_transport_details"
         android:name="com.example.agrotracker.ui.transport_details.TransportDetailsFragment"
         android:label="TransportDetailsFragment">
         <argument
@@ -32,6 +35,7 @@
             app:popExitAnim="@animator/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
+        tools:layout="@layout/fragment_add_seal"
         android:id="@+id/addSealFragment"
         android:name="com.example.agrotracker.ui.add_seal.AddSealFragment"
         android:label="AddSealFragment" />

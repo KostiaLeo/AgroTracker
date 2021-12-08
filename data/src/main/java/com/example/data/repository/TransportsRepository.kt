@@ -41,12 +41,12 @@ class TransportsRepositoryDefault @Inject constructor(
 
     private fun addPendingPhotos(fact: Fact) {
         val photoNamesSet = sharedPreferences
-            .getStringSet(SharedPreferencesKeys.PHOTOS_SET, emptySet()).orEmpty().toMutableSet()
+            .getStringSet(SharedPreferencesKeys.KEY_PHOTOS_SET, emptySet()).orEmpty().toMutableSet()
 
         fact.seals.mapNotNullTo(photoNamesSet) { it.photoName }
 
         sharedPreferences.edit {
-            putStringSet(SharedPreferencesKeys.PHOTOS_SET, photoNamesSet)
+            putStringSet(SharedPreferencesKeys.KEY_PHOTOS_SET, photoNamesSet)
         }
     }
 }

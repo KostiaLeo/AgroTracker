@@ -16,7 +16,10 @@ object SingletonModule {
 
     @Provides
     fun providesSharedPreferences(@ApplicationContext appContext: Context): SharedPreferences {
-        return appContext.getSharedPreferences(SharedPreferencesKeys.NAME, Context.MODE_PRIVATE)
+        return appContext.getSharedPreferences(
+            SharedPreferencesKeys.PREFERENCES_NAME,
+            Context.MODE_PRIVATE
+        )
     }
 
     @Provides

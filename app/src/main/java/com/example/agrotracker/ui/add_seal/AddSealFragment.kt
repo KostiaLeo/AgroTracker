@@ -6,6 +6,7 @@ import android.view.View
 import android.viewbinding.library.fragment.viewBinding
 import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
@@ -14,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
 import com.example.agrotracker.helpers.PhotoTaker
+import com.example.agrotracker.utils.Regexes
 import com.example.agrotracker.utils.ResultKeys
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +43,8 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     }
 
     private fun initViews() {
+        activity?.actionBar?.title = "Add Seal"
+
         binding.capturePhoto.setOnClickListener {
             errorSnackBar?.dismiss()
             capturePhoto()
@@ -54,6 +58,12 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         binding.submit.setOnClickListener {
             setResult()
             findNavController().popBackStack()
+        }
+
+        binding.sealNumberInput.doOnTextChanged { text, _, _, _ ->
+            val matches = text?.matches(Regexes.SEAL_NUMBER_REGEX) == true
+            binding.submit.isEnabled = matches
+            binding.textField.error = if (matches) "" else "Invalid seal number"
         }
     }
 

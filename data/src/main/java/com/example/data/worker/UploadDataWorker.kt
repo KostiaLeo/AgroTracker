@@ -54,7 +54,8 @@ class UploadDataWorker @AssistedInject constructor(
 
     private suspend fun uploadPhotos() {
         val pendingPhotoSet =
-            sharedPreferences.getStringSet(SharedPreferencesKeys.PHOTOS_SET, emptySet()).orEmpty()
+            sharedPreferences.getStringSet(SharedPreferencesKeys.KEY_PHOTOS_SET, emptySet())
+                .orEmpty()
                 .toMutableSet()
 
         supervisorScope {
@@ -67,7 +68,7 @@ class UploadDataWorker @AssistedInject constructor(
         }
 
         sharedPreferences.edit {
-            putStringSet(SharedPreferencesKeys.PHOTOS_SET, pendingPhotoSet)
+            putStringSet(SharedPreferencesKeys.KEY_PHOTOS_SET, pendingPhotoSet)
         }
     }
 

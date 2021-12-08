@@ -41,6 +41,8 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     }
 
     private fun initViews() {
+        activity?.actionBar?.title = args.transport.stateNumber
+
         binding.addSeal.setOnClickListener {
             setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
                 val sealNumber =
