@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">AgroTracker</string>
+
+    <string name="type_seal_number">Введіть номер пломби</string>
+    <string name="take_photo">Сфотографувати</string>
+    <string name="pick_from_galley">Вибрати з галереї</string>
+    <string name="submit_seal">Підтвердити</string>
+    <string name="uploading_data">Зачекайте, дані відправляються на сервер…</string>
+    <string name="seals_label">Пломби:</string>
+    <string name="add_seal">Додати пломбу</string>
+    <string name="submit_transport">Зберегти</string>
+    <string name="available_transports">Доступні автомобілі</string>
+    <string name="transport_info">Інформація про автомобіль</string>
+
+    <string name="trailer_number">Причеп: %1$s</string>
+    <string name="invalid_seal_number">Неправильний номер пломби</string>
+    <string name="seal_number_not_recognized">Номер не розпізнано, спробуйте ще</string>
 </resources>

@@ -65,10 +65,8 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     private fun bindTransport(transport: Transport) {
         binding.stateNumber.text = transport.stateNumber
         binding.driverData.text = transport.driverData
-        binding.trailerNumber.text = buildString {
-            append("Trailer: ")
-            append(transport.trailerNumber)
-        }
+        binding.trailerNumber.text =
+            getString(R.string.trailer_number).format(transport.trailerNumber)
     }
 
     private fun observeData() {

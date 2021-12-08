@@ -44,8 +44,6 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     }
 
     private fun initViews() {
-        activity?.actionBar?.title = "Add Seal"
-
         binding.capturePhoto.setOnClickListener {
             errorSnackBar?.dismiss()
             capturePhoto()
@@ -64,7 +62,7 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         binding.sealNumberInput.doOnTextChanged { text, _, _, _ ->
             val matches = text?.matches(Regexes.SEAL_NUMBER_REGEX) == true
             binding.submit.isEnabled = matches
-            binding.textField.error = if (matches) "" else "Invalid seal number"
+            binding.textField.error = if (matches) "" else getString(R.string.invalid_seal_number)
         }
     }
 
@@ -116,12 +114,11 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     private fun askToRetakePhoto() {
         errorSnackBar = Snackbar.make(
             binding.root,
-            "Номер не розпізнано, спробуйте ще",
+            R.string.seal_number_not_recognized,
             Snackbar.LENGTH_INDEFINITE
-        )
-            .setAction("Take photo") {
-                capturePhoto()
-            }
+        ).setAction(R.string.take_photo) {
+            capturePhoto()
+        }
         errorSnackBar?.show()
     }
 

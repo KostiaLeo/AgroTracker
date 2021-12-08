@@ -5,11 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/transports_label"
+        style="@style/largeTextTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_item_margin"
+        android:layout_marginBottom="@dimen/item_margin_large"
+        android:text="@string/available_transports"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/transports_rv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/item_margin_small"
+        app:layout_constraintTop_toBottomOf="@id/transports_label"
         tools:listitem="@layout/transport_list_item" />
 
     <TextView
@@ -17,7 +30,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/item_margin_large"
-        android:text="Please wait, your data is being uploaded..."
+        android:text="@string/uploading_data"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/progress_bar"
         app:layout_constraintEnd_toEndOf="parent"

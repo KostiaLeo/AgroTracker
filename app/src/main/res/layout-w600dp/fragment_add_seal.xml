@@ -22,23 +22,29 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/capture_photo"
-        style="@style/secondaryActionButton"
-        android:text="@string/take_photo"
-        app:icon="@drawable/ic_baseline_photo_camera_24"
-        app:layout_constraintBottom_toTopOf="@id/pick_from_gallery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+    <LinearLayout
+        android:id="@+id/photo_action_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/action_buttons_divider"
+        android:orientation="horizontal"
+        android:showDividers="middle"
+        app:layout_constraintBottom_toTopOf="@id/submit">
 
-    <Button
-        android:id="@+id/pick_from_gallery"
-        style="@style/secondaryActionButton"
-        android:text="@string/pick_from_galley"
-        app:icon="@drawable/ic_baseline_photo_library_24"
-        app:layout_constraintBottom_toTopOf="@id/submit"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/pick_from_gallery"
+            style="@style/secondaryActionButton"
+            android:layout_weight="1"
+            android:text="@string/pick_from_galley"
+            app:icon="@drawable/ic_baseline_photo_library_24" />
+
+        <Button
+            android:id="@+id/capture_photo"
+            style="@style/secondaryActionButton"
+            android:layout_weight="1"
+            android:text="@string/take_photo"
+            app:icon="@drawable/ic_baseline_photo_camera_24" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/submit"
