@@ -3,12 +3,13 @@ package com.example.data.repository
 import android.content.SharedPreferences
 import androidx.core.content.edit
 import com.example.data.api.TransportsApi
-import com.example.data.mappers.TransportMapper
+import com.example.data.mappers.toTransport
 import com.example.data.models.Fact
 import com.example.data.models.Transport
 import com.example.data.utils.SharedPreferencesKeys
 import com.example.data.utils.TransportKeys.IN_PROCESS
 import com.example.data.worker.UploadDataLauncher
+import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class TransportsRepositoryDefault @Inject constructor(
     override fun loadTransports(): Flow<List<Transport>> {
         return transportsApi.loadPendingTransports()
             .map { snapshot ->
-                snapshot.documents.map(TransportMapper::mapDocumentToTransport)
+                snapshot.documents.map(DocumentSnapshot::toTransport)
             }
     }
 

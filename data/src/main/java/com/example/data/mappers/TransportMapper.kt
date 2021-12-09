@@ -1,22 +1,18 @@
 package com.example.data.mappers
 
 import com.example.data.models.Transport
-import com.example.data.utils.TransportKeys
+import com.example.data.utils.TransportKeys.DRIVER_DATA
+import com.example.data.utils.TransportKeys.IN_PROCESS
+import com.example.data.utils.TransportKeys.STATE_NUMBER
+import com.example.data.utils.TransportKeys.TRAILER_NUMBER
+import com.example.data.utils.getOrError
 import com.google.firebase.firestore.DocumentSnapshot
 
-object TransportMapper {
-    fun mapDocumentToTransport(documentSnapshot: DocumentSnapshot): Transport {
-        val id = documentSnapshot.id
-        val stateNumber =
-            documentSnapshot[TransportKeys.STATE_NUMBER] as? String ?: error("Invalid stateNumber")
-        val driverData =
-            documentSnapshot[TransportKeys.DRIVER_DATA] as? String ?: error("Invalid driverData")
-        val trailerNumber =
-            documentSnapshot[TransportKeys.TRAILER_NUMBER] as? String
-                ?: error("Invalid trailerNumber")
-        val inProcess =
-            documentSnapshot[TransportKeys.IN_PROCESS] as? Boolean ?: error("Invalid inProcess")
+fun DocumentSnapshot.toTransport(): Transport {
+    val stateNumber = getOrError<String>(STATE_NUMBER)
+    val driverData = getOrError<String>(DRIVER_DATA)
+    val trailerNumber = getOrError<String>(TRAILER_NUMBER)
+    val inProcess = getOrError<Boolean>(IN_PROCESS)
 
-        return Transport(id, inProcess, stateNumber, driverData, trailerNumber)
-    }
+    return Transport(id, inProcess, stateNumber, driverData, trailerNumber)
 }
