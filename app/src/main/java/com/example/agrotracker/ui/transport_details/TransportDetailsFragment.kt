@@ -16,7 +16,6 @@ import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentTransportDetailsBinding
 import com.example.agrotracker.ui.transport_details.seals_adapter.SealsAdapter
 import com.example.agrotracker.utils.ResultKeys
-import com.example.data.models.Transport
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -33,7 +32,7 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setResultListener()
         initViews()
-        bindTransport(args.transport)
+        bindTransportInfo()
         observeData()
         handleBackPress()
     }
@@ -64,7 +63,8 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
             LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
     }
 
-    private fun bindTransport(transport: Transport) {
+    private fun bindTransportInfo() {
+        val transport = args.transport
         binding.stateNumber.text = transport.stateNumber
         binding.driverData.text = transport.driverData
         binding.trailerNumber.text =
@@ -78,7 +78,7 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     }
 
     private fun handleBackPress() {
-        activity?.onBackPressedDispatcher?.addCallback {
+        activity?.onBackPressedDispatcher?.addCallback(viewLifecycleOwner) {
             val alert = buildExitConfirmationAlert()
             alert.show()
         }
