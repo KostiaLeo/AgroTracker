@@ -1,6 +1,7 @@
 package com.example.data.mappers
 
 import com.example.data.models.Transport
+import com.example.data.utils.TransportKeys.CURRENT_WAYBILL
 import com.example.data.utils.TransportKeys.DRIVER_DATA
 import com.example.data.utils.TransportKeys.IN_PROCESS
 import com.example.data.utils.TransportKeys.STATE_NUMBER
@@ -13,6 +14,7 @@ fun DocumentSnapshot.toTransport(): Transport {
     val driverData = getOrError<String>(DRIVER_DATA)
     val trailerNumber = getOrError<String>(TRAILER_NUMBER)
     val inProcess = getOrError<Boolean>(IN_PROCESS)
+    val currentWaybill = getOrError<String>(CURRENT_WAYBILL)
 
-    return Transport(id, inProcess, stateNumber, driverData, trailerNumber)
+    return Transport(id, inProcess, stateNumber, driverData, trailerNumber, currentWaybill)
 }

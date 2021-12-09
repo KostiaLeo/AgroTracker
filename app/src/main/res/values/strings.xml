@@ -18,4 +18,6 @@
     <string name="trailer_number">Причеп: %1$s</string>
     <string name="invalid_seal_number">Неправильний номер пломби</string>
     <string name="seal_number_not_recognized">Номер не розпізнано, спробуйте ще</string>
+
+    <string name="waybill_id">ТТН %1$s</string>
 </resources>

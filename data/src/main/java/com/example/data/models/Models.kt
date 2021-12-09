@@ -9,12 +9,14 @@ data class Transport(
     val inProcess: Boolean = true,
     val stateNumber: String = "",
     val driverData: String = "",
-    val trailerNumber: String = ""
+    val trailerNumber: String = "",
+    val currentWayBill: String = ""
 ) : Parcelable
 
 
 data class Fact(
     val transportId: String,
+    val wayBillId: String,
     val seals: List<Seal> = emptyList()
 )
 
