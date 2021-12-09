@@ -8,7 +8,7 @@ import com.example.data.models.Transport
 
 class TransportsAdapter(
     private val clickListener: (Transport) -> Unit
-) : ListAdapter<Transport, TransportViewHolder>(Transport.TransportDiffUtil()) {
+) : ListAdapter<Transport, TransportViewHolder>(TransportDiffUtil()) {
 
     private val positionClickListener = { position: Int ->
         clickListener(getItem(position))

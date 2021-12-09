@@ -1,7 +1,6 @@
 package com.example.data.models
 
 import android.os.Parcelable
-import androidx.recyclerview.widget.DiffUtil
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
@@ -11,17 +10,7 @@ data class Transport(
     val stateNumber: String = "",
     val driverData: String = "",
     val trailerNumber: String = ""
-) : Parcelable {
-    class TransportDiffUtil : DiffUtil.ItemCallback<Transport>() {
-        override fun areItemsTheSame(oldItem: Transport, newItem: Transport): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Transport, newItem: Transport): Boolean {
-            return oldItem == newItem
-        }
-    }
-}
+) : Parcelable
 
 
 data class Fact(
@@ -33,14 +22,4 @@ data class Fact(
 data class Seal(
     val sealNumber: String,
     val photoName: String? = null
-) {
-    class SealDiffUtil : DiffUtil.ItemCallback<Seal>() {
-        override fun areItemsTheSame(oldItem: Seal, newItem: Seal): Boolean {
-            return oldItem.sealNumber == newItem.sealNumber
-        }
-
-        override fun areContentsTheSame(oldItem: Seal, newItem: Seal): Boolean {
-            return oldItem == newItem
-        }
-    }
-}
+)

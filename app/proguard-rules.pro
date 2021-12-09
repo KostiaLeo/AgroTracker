@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-assumenosideeffects class android.util.Log {
+    public static boolean isLoggable(java.lang.String, int);
+    public static int d(...);
+    public static int e(...);
+    public static int w(...);
+    public static int v(...);
+    public static int i(...);
+}
+-keepnames class androidx.navigation.fragment.NavHostFragment
+-keepnames class com.example.data.models.Transport

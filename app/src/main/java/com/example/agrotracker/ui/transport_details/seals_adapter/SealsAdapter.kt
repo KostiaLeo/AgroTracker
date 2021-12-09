@@ -6,7 +6,7 @@ import com.example.agrotracker.databinding.SealListItemBinding
 import com.example.agrotracker.utils.getInflaterFrom
 import com.example.data.models.Seal
 
-class SealsAdapter : ListAdapter<Seal, SealViewHolder>(Seal.SealDiffUtil()) {
+class SealsAdapter : ListAdapter<Seal, SealViewHolder>(SealDiffUtil()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SealViewHolder {
         return SealViewHolder(

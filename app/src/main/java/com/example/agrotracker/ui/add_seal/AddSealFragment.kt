@@ -3,7 +3,6 @@ package com.example.agrotracker.ui.add_seal
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.viewbinding.library.fragment.viewBinding
 import androidx.core.os.bundleOf
 import androidx.core.view.children
 import androidx.core.view.isVisible
@@ -13,6 +12,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
 import com.example.agrotracker.helpers.PhotoTaker
@@ -26,7 +26,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
 
-    private val binding: FragmentAddSealBinding by viewBinding()
+    private val binding by viewBinding(FragmentAddSealBinding::bind)
 
     private val viewModel: AddSealViewModel by viewModels()
 

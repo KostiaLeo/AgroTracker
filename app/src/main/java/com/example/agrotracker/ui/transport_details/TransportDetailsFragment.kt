@@ -3,7 +3,6 @@ package com.example.agrotracker.ui.transport_details
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.View
-import android.viewbinding.library.fragment.viewBinding
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
@@ -12,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentTransportDetailsBinding
 import com.example.agrotracker.ui.transport_details.seals_adapter.SealsAdapter
@@ -22,7 +22,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
 
-    private val binding: FragmentTransportDetailsBinding by viewBinding()
+    private val binding by viewBinding(FragmentTransportDetailsBinding::bind)
 
     private val viewModel: TransportDetailsViewModel by viewModels()
 
@@ -78,8 +78,6 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
     }
 
     private fun handleBackPress() {
-        findNavController().enableOnBackPressed(true)
-
         activity?.onBackPressedDispatcher?.addCallback {
             val alert = buildExitConfirmationAlert()
             alert.show()
