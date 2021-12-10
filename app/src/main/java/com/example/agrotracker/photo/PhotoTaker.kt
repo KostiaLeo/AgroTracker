@@ -5,6 +5,7 @@ import android.os.Environment
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import com.canhub.cropper.CropImageActivity
 import com.canhub.cropper.CropImageContract
 import com.canhub.cropper.options
 import kotlinx.coroutines.channels.Channel
@@ -13,6 +14,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
+/**
+ * Interface for a handy interaction with camera/gallery and cropping images.
+ * It consists of a single suspend function that returns captured photo's uri.
+ * Under the hood it brings up the [CropImageActivity] and awaits the result (using [CropPhotoTaker.uriChannel]).
+ * When the activity result is up the photo's uri is put into the [CropPhotoTaker.uriChannel].
+ * */
 interface PhotoTaker {
     suspend fun takePhoto(): Uri?
 }

@@ -1,4 +1,4 @@
-package com.example.agrotracker
+package com.example.agrotracker.ui.host
 
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory

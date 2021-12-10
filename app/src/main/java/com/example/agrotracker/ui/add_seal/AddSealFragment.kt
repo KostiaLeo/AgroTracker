@@ -83,8 +83,6 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
                 is RecognitionState.Error -> {
                     showContent()
                     askToRetakePhoto()
-                    // there's no need to keep photo if it was invalid
-                    removeInvalidPhoto()
                 }
             }
         }
@@ -109,10 +107,6 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             scanSeal()
         }
         errorSnackBar?.show()
-    }
-
-    private fun removeInvalidPhoto() {
-        viewModel.removePhoto(photoUri)
     }
 
     private fun showContent() {

@@ -16,6 +16,8 @@ import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentTransportDetailsBinding
 import com.example.agrotracker.ui.transport_details.seals_adapter.SealsAdapter
 import com.example.agrotracker.utils.ResultKeys
+import com.example.agrotracker.utils.ResultKeys.SEAL_NUMBER
+import com.example.agrotracker.utils.ResultKeys.SEAL_PHOTO_NAME
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -39,9 +41,8 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
 
     private fun setResultListener() {
         setFragmentResultListener(ResultKeys.CODE_ADD_SEAL) { _, bundle ->
-            val sealNumber =
-                bundle.getString(ResultKeys.SEAL_NUMBER) ?: return@setFragmentResultListener
-            val sealPhotoName = bundle.getString(ResultKeys.SEAL_PHOTO_NAME)
+            val sealNumber = bundle.getString(SEAL_NUMBER) ?: return@setFragmentResultListener
+            val sealPhotoName = bundle.getString(SEAL_PHOTO_NAME)
             viewModel.addSeal(sealNumber, sealPhotoName)
         }
     }

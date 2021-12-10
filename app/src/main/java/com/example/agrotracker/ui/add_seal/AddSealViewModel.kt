@@ -37,12 +37,15 @@ class AddSealViewModel @Inject constructor(
             _recognitionStateLiveData.value = if (sealNumber != null) {
                 RecognitionState.Success(RecognitionResult(sealNumber, uri))
             } else {
+                // there's no need to keep photo if it was invalid
+                removePhoto(uri)
+
                 RecognitionState.Error
             }
         }
     }
 
-    fun removePhoto(uri: Uri?) {
+    private fun removePhoto(uri: Uri?) {
         val errorHandler = CoroutineExceptionHandler { _, throwable -> logError(throwable) }
 
         viewModelScope.launch(Dispatchers.IO + errorHandler) {
