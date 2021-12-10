@@ -7,7 +7,7 @@
     <string name="uploading_data">Зачекайте, дані відправляються на сервер…</string>
     <string name="seals_label">Пломби:</string>
     <string name="add_seal">Додати пломбу</string>
-    <string name="submit_transport">Зберегти</string>
+    <string name="submit_transport">Зафіксувати</string>
     <string name="available_transports">Доступні автомобілі</string>
     <string name="transport_info">Інформація про автомобіль</string>
     <string name="exit_confirmation">Ви впевнені, що хочете вийти?\nВся введена інформація буде втрачена</string>
