@@ -14,14 +14,14 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="Theme.ArgoTracker.NoActionBar" parent="Theme.AgroTracker">
+    <style name="Theme.AgroTracker.NoActionBar" parent="Theme.AgroTracker">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.ArgoTracker.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.AgroTracker.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.ArgoTracker.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.AgroTracker.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="primaryActionButton" parent="TextAppearance.AppCompat.Button">
         <item name="android:layout_height">@dimen/action_button_height</item>

@@ -11,7 +11,7 @@ class TransportViewHolder(
 
     init {
         binding.root.setOnClickListener {
-            onClickListener(adapterPosition)
+            onClickListener(bindingAdapterPosition)
         }
     }
 

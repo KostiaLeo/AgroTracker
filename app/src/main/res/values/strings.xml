@@ -2,8 +2,7 @@
     <string name="app_name">AgroTracker</string>
 
     <string name="type_seal_number">Введіть номер пломби</string>
-    <string name="take_photo">Сфотографувати</string>
-    <string name="pick_from_galley">Вибрати з галереї</string>
+    <string name="take_photo">Сканувати</string>
     <string name="submit_seal">Підтвердити</string>
     <string name="uploading_data">Зачекайте, дані відправляються на сервер…</string>
     <string name="seals_label">Пломби:</string>
@@ -20,4 +19,9 @@
     <string name="seal_number_not_recognized">Номер не розпізнано, спробуйте ще</string>
 
     <string name="waybill_id">ТТН %1$s</string>
+
+    <string name="crop_image_menu_crop">Обрізати</string>
+    <string name="pick_image_chooser_title">Виберіть джерело</string>
+    <string name="pick_image_camera">Сфотографувати</string>
+    <string name="pick_image_gallery">Вибрати з галереї</string>
 </resources>

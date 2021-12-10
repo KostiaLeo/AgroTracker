@@ -15,9 +15,6 @@ import javax.inject.Inject
 
 interface PhotoTaker {
     suspend fun capturePhoto(): Uri?
-    suspend fun pickFromGallery(): Uri? {
-        return null
-    }
 }
 
 class CropPhotoTaker @Inject constructor(
@@ -27,8 +24,6 @@ class CropPhotoTaker @Inject constructor(
     companion object {
         private const val TIMESTAMP_DATE_FORMAT = "yyyyMMdd_HHmmss"
         private const val AUTHORITY = "com.example.android.fileprovider"
-
-        private const val IMAGE_MIME_TYPE = "image/*"
     }
 
     private val cropPhotoLauncher =
@@ -44,31 +39,10 @@ class CropPhotoTaker @Inject constructor(
     override suspend fun capturePhoto(): Uri? {
         val file = createImageFile()
         val uri = FileProvider.getUriForFile(fragment.requireContext(), AUTHORITY, file)
-        cropPhotoLauncher.launch(options {
-            cropImageOptions.customOutputUri = uri
-        })
+        cropPhotoLauncher.launch(options { cropImageOptions.customOutputUri = uri })
 
         return uriChannel.receive()
     }
-
-//    override suspend fun pickFromGallery(): Uri? {
-//        pickFromGalleryLauncher.launch(IMAGE_MIME_TYPE)
-//        val photoUri = uriChannel.receive() ?: return null
-//
-//        return withContext(Dispatchers.IO) {
-//            val targetFile = createImageFile()
-//            copyFromGalleryToLocalStorage(photoUri, targetFile)
-//            FileProvider.getUriForFile(fragment.requireContext(), AUTHORITY, targetFile)
-//        }
-//    }
-//
-//    private fun copyFromGalleryToLocalStorage(photoUri: Uri, targetFile: File) {
-//        fragment.requireActivity().contentResolver.openInputStream(photoUri)?.use { input ->
-//            targetFile.outputStream().use { output ->
-//                input.copyTo(output, DEFAULT_BUFFER_SIZE)
-//            }
-//        }
-//    }
 
     private fun createImageFile(): File {
         val timeStamp = SimpleDateFormat(TIMESTAMP_DATE_FORMAT, Locale.getDefault()).format(Date())

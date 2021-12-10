@@ -28,15 +28,6 @@
         style="@style/secondaryActionButton"
         android:text="@string/take_photo"
         app:icon="@drawable/ic_baseline_photo_camera_24"
-        app:layout_constraintBottom_toTopOf="@id/pick_from_gallery"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Button
-        android:id="@+id/pick_from_gallery"
-        style="@style/secondaryActionButton"
-        android:text="@string/pick_from_galley"
-        app:icon="@drawable/ic_baseline_photo_library_24"
         app:layout_constraintBottom_toTopOf="@id/submit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

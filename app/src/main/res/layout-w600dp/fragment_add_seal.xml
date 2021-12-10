@@ -30,14 +30,7 @@
         android:divider="@drawable/action_buttons_divider"
         android:orientation="horizontal"
         android:showDividers="middle"
-        app:layout_constraintBottom_toTopOf="@id/submit">
-
-        <Button
-            android:id="@+id/pick_from_gallery"
-            style="@style/secondaryActionButton"
-            android:layout_weight="1"
-            android:text="@string/pick_from_galley"
-            app:icon="@drawable/ic_baseline_photo_library_24" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
             android:id="@+id/capture_photo"
@@ -45,17 +38,15 @@
             android:layout_weight="1"
             android:text="@string/take_photo"
             app:icon="@drawable/ic_baseline_photo_camera_24" />
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/submit"
-        style="@style/primaryActionButton"
-        android:enabled="false"
-        android:text="@string/submit_seal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:enabled="true" />
+        <Button
+            android:id="@+id/submit"
+            style="@style/primaryActionButton"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/submit_seal"
+            tools:enabled="true" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar"

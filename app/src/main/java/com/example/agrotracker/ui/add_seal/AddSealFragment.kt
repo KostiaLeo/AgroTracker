@@ -49,11 +49,6 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             capturePhoto()
         }
 
-        binding.pickFromGallery.setOnClickListener {
-            errorSnackBar?.dismiss()
-            pickPhotoFromGallery()
-        }
-
         binding.submit.setOnClickListener {
             setResult()
             findNavController().popBackStack()
@@ -69,14 +64,6 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     private fun capturePhoto() {
         lifecycleScope.launch {
             photoTaker.capturePhoto()?.let { uri ->
-                viewModel.recognizeSealNumber(uri)
-            }
-        }
-    }
-
-    private fun pickPhotoFromGallery() {
-        lifecycleScope.launch {
-            photoTaker.pickFromGallery()?.let { uri ->
                 viewModel.recognizeSealNumber(uri)
             }
         }
