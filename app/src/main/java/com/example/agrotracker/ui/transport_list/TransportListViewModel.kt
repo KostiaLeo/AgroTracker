@@ -15,10 +15,9 @@ class TransportListViewModel @Inject constructor(
     loadTransportUseCase: LoadTransportListUseCase,
     workManager: WorkManager
 ) : ViewModel() {
-    val transportsLiveData =
-        loadTransportUseCase.loadTransport()
-            .asLiveData()
+    val transportsLiveData = loadTransportUseCase().asLiveData()
 
+    // a progress is shown until data uploading is finished
     val pendingUploadsLiveData = workManager.getWorkInfosByTagLiveData(UploadDataWorker.TAG)
         .map { works -> works.any { it.state == WorkInfo.State.RUNNING } }
 }

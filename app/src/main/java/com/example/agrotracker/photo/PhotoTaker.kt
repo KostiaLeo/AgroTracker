@@ -1,4 +1,4 @@
-package com.example.agrotracker.helpers
+package com.example.agrotracker.photo
 
 import android.net.Uri
 import android.os.Environment
@@ -14,7 +14,7 @@ import java.util.*
 import javax.inject.Inject
 
 interface PhotoTaker {
-    suspend fun capturePhoto(): Uri?
+    suspend fun takePhoto(): Uri?
 }
 
 class CropPhotoTaker @Inject constructor(
@@ -36,7 +36,7 @@ class CropPhotoTaker @Inject constructor(
 
     private var capturingImageUri: Uri? = null
 
-    override suspend fun capturePhoto(): Uri? {
+    override suspend fun takePhoto(): Uri? {
         val file = createImageFile()
         val uri = FileProvider.getUriForFile(fragment.requireContext(), AUTHORITY, file)
         cropPhotoLauncher.launch(options { cropImageOptions.customOutputUri = uri })

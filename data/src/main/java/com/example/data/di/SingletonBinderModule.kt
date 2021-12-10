@@ -9,7 +9,7 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class RepositoryBuilderModule {
+abstract class SingletonBinderModule {
 
     @Binds
     abstract fun bindUploadWorkerLauncher(uploadDataWorkerLauncher: UploadDataWorkerLauncher): UploadDataLauncher

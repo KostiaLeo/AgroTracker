@@ -6,13 +6,13 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 interface LoadTransportListUseCase {
-    fun loadTransport(): Flow<List<Transport>>
+    operator fun invoke(): Flow<List<Transport>>
 }
 
 class LoadTransportListUseCaseDefault @Inject constructor(
     private val transportsRepository: TransportsRepository
 ) : LoadTransportListUseCase {
-    override fun loadTransport(): Flow<List<Transport>> {
+    override operator fun invoke(): Flow<List<Transport>> {
         return transportsRepository.loadTransports()
     }
 }

@@ -12,16 +12,3 @@ data class Transport(
     val trailerNumber: String = "",
     val currentWayBill: String = ""
 ) : Parcelable
-
-
-data class Fact(
-    val transportId: String,
-    val wayBillId: String,
-    val seals: List<Seal> = emptyList()
-)
-
-
-data class Seal(
-    val sealNumber: String,
-    val photoName: String? = null
-)

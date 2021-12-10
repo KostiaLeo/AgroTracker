@@ -27,7 +27,7 @@ class TransportDetailsViewModel @Inject constructor(
 
     fun submitTransport(transport: Transport) {
         val fact = Fact(transport.id, transport.currentWayBill, seals)
-        submitTransportUseCase.submit(fact)
+        submitTransportUseCase(fact)
     }
 }
 

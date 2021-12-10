@@ -18,9 +18,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
+import kotlinx.coroutines.*
 import java.io.File
 
 @HiltWorker
@@ -73,12 +71,14 @@ class UploadDataWorker @AssistedInject constructor(
     }
 
     private suspend fun uploadPhoto(photoName: String) {
-        val reference = Firebase.storage.reference
-        val uri = buildUriToImageFile(photoName)
+        withContext(Dispatchers.IO) {
+            val reference = Firebase.storage.reference
+            val uri = buildUriToImageFile(photoName)
 
-        reference.child(photoName).putFile(uri).await()
+            reference.child(photoName).putFile(uri).await()
 
-        uri.toFile().delete()
+            uri.toFile().delete()
+        }
     }
 
     private fun buildUriToImageFile(fileName: String): Uri {

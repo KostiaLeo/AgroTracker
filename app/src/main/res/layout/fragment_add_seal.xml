@@ -24,7 +24,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/capture_photo"
+        android:id="@+id/scan_seal"
         style="@style/secondaryActionButton"
         android:text="@string/take_photo"
         app:icon="@drawable/ic_baseline_photo_camera_24"

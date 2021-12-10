@@ -2,48 +2,57 @@ package com.example.agrotracker.ui.add_seal
 
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.agrotracker.helpers.SealRecognizer
+import com.example.agrotracker.domain.RecognizeSealUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddSealViewModel @Inject constructor(
-    private val sealRecognizer: SealRecognizer
+    private val recognizeSealUseCase: RecognizeSealUseCase
 ) : ViewModel() {
 
-    private val _sealRecognitionStateLiveData = MutableLiveData<SealRecognitionState>()
-    val sealNumberRecognitionStateLiveData: LiveData<SealRecognitionState> get() = _sealRecognitionStateLiveData
+    private val _recognitionStateLiveData = MutableLiveData<RecognitionState>()
+    val recognitionStateLiveData: LiveData<RecognitionState> get() = _recognitionStateLiveData
 
-    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
+    private val recognitionErrorHandler = CoroutineExceptionHandler { _, throwable ->
         logError(throwable)
-        _sealRecognitionStateLiveData.postValue(SealRecognitionState.Error(throwable))
+        _recognitionStateLiveData.postValue(RecognitionState.Error)
     }
 
 
     fun recognizeSealNumber(uri: Uri) {
-        viewModelScope.launch(errorHandler) {
-            _sealRecognitionStateLiveData.value = SealRecognitionState.Loading
+        viewModelScope.launch(recognitionErrorHandler) {
+            _recognitionStateLiveData.value = RecognitionState.Loading
 
-            val sealNumber = sealRecognizer.recognize(uri)
+            val sealNumber = recognizeSealUseCase(uri)
 
-            _sealRecognitionStateLiveData.value = if (sealNumber != null) {
-                SealRecognitionState.Success(RecognitionResult(sealNumber, uri))
+            _recognitionStateLiveData.value = if (sealNumber != null) {
+                RecognitionState.Success(RecognitionResult(sealNumber, uri))
             } else {
-                SealRecognitionState.Error(IllegalStateException("Seal number is not recognized"))
+                RecognitionState.Error
             }
         }
     }
 
+    fun removePhoto(uri: Uri?) {
+        val errorHandler = CoroutineExceptionHandler { _, throwable -> logError(throwable) }
+
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            uri?.toFile()?.delete()
+        }
+    }
 
     override fun onCleared() {
         super.onCleared()
-        sealRecognizer.close()
+        recognizeSealUseCase.close()
     }
 
 

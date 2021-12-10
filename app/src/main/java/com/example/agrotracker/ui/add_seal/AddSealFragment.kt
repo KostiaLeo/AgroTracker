@@ -15,9 +15,9 @@ import androidx.navigation.fragment.findNavController
 import by.kirich1409.viewbindingdelegate.viewBinding
 import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
-import com.example.agrotracker.helpers.PhotoTaker
-import com.example.agrotracker.utils.Regexes
+import com.example.agrotracker.photo.PhotoTaker
 import com.example.agrotracker.utils.ResultKeys
+import com.example.data.utils.Regexes
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -44,9 +44,9 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
     }
 
     private fun initViews() {
-        binding.capturePhoto.setOnClickListener {
+        binding.scanSeal.setOnClickListener {
             errorSnackBar?.dismiss()
-            capturePhoto()
+            scanSeal()
         }
 
         binding.submit.setOnClickListener {
@@ -61,28 +61,30 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         }
     }
 
-    private fun capturePhoto() {
+    private fun scanSeal() {
         lifecycleScope.launch {
-            photoTaker.capturePhoto()?.let { uri ->
+            photoTaker.takePhoto()?.let { uri ->
                 viewModel.recognizeSealNumber(uri)
             }
         }
     }
 
     private fun setupStateObservers() {
-        viewModel.sealNumberRecognitionStateLiveData.observe(this) { state ->
+        viewModel.recognitionStateLiveData.observe(this) { state ->
             when (state) {
-                is SealRecognitionState.Success -> {
+                is RecognitionState.Success -> {
                     showContent()
                     binding.sealNumberInput.setText(state.result.number)
                     photoUri = state.result.uri
                 }
-                is SealRecognitionState.Loading -> {
+                is RecognitionState.Loading -> {
                     showProgress()
                 }
-                is SealRecognitionState.Error -> {
+                is RecognitionState.Error -> {
                     showContent()
                     askToRetakePhoto()
+                    // there's no need to keep photo if it was invalid
+                    removeInvalidPhoto()
                 }
             }
         }
@@ -104,11 +106,14 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             R.string.seal_number_not_recognized,
             Snackbar.LENGTH_INDEFINITE
         ).setAction(R.string.take_photo) {
-            capturePhoto()
+            scanSeal()
         }
         errorSnackBar?.show()
     }
 
+    private fun removeInvalidPhoto() {
+        viewModel.removePhoto(photoUri)
+    }
 
     private fun showContent() {
         binding.root.children.forEach { it.isVisible = true }

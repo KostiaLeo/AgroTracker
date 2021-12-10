@@ -5,13 +5,13 @@ import com.example.data.repository.TransportsRepository
 import javax.inject.Inject
 
 interface SubmitTransportUseCase {
-    fun submit(fact: Fact)
+    operator fun invoke(fact: Fact)
 }
 
 class SubmitTransportUseCaseDefault @Inject constructor(
     private val repository: TransportsRepository
 ) : SubmitTransportUseCase {
-    override fun submit(fact: Fact) {
+    override operator fun invoke(fact: Fact) {
         repository.submitTransport(fact)
     }
 }

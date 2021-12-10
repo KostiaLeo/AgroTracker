@@ -1,8 +1,8 @@
-package com.example.agrotracker.helpers
+package com.example.data.recognizer
 
 import android.content.Context
 import android.net.Uri
-import com.example.agrotracker.utils.Regexes.SEAL_NUMBER_REGEX
+import com.example.data.utils.Regexes.SEAL_NUMBER_REGEX
 import com.example.data.utils.await
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.TextRecognition
@@ -23,7 +23,13 @@ class OfflineSealRecognizer @Inject constructor(
 
     private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
-
+    /**
+     * ML Kit recognizes all text on the picture and represents it as text blocks.
+     * We iterate through them and look for the text element that matches a seal number pattern.
+     * If such is not found function returns null.
+     * @param uri - image uri to scan.
+     * @return recognized seal number that matches [SEAL_NUMBER_REGEX] or [null] if a suitable number wasn't detected.
+     * */
     override suspend fun recognize(uri: Uri): String? = withContext(Dispatchers.Default) {
         val image = InputImage.fromFilePath(appContext, uri)
         val visionText = recognizer.process(image).await()

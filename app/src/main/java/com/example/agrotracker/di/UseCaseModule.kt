@@ -1,9 +1,6 @@
 package com.example.agrotracker.di
 
-import com.example.agrotracker.domain.LoadTransportListUseCase
-import com.example.agrotracker.domain.LoadTransportListUseCaseDefault
-import com.example.agrotracker.domain.SubmitTransportUseCase
-import com.example.agrotracker.domain.SubmitTransportUseCaseDefault
+import com.example.agrotracker.domain.*
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,5 +14,8 @@ abstract class UseCaseModule {
     abstract fun bindLoadTransportListUseCase(useCase: LoadTransportListUseCaseDefault): LoadTransportListUseCase
 
     @Binds
-    abstract fun bindSubmitTransportUseCase(useCaseDefault: SubmitTransportUseCaseDefault): SubmitTransportUseCase
+    abstract fun bindSubmitTransportUseCase(useCase: SubmitTransportUseCaseDefault): SubmitTransportUseCase
+
+    @Binds
+    abstract fun bindRecognizeSealUseCase(useCase: RecognizeSealUseCaseDefault): RecognizeSealUseCase
 }

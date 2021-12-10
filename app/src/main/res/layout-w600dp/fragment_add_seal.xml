@@ -33,7 +33,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
-            android:id="@+id/capture_photo"
+            android:id="@+id/scan_seal"
             style="@style/secondaryActionButton"
             android:layout_weight="1"
             android:text="@string/take_photo"

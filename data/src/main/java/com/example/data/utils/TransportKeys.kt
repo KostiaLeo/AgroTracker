@@ -1,8 +1,8 @@
 package com.example.data.utils
 
 object TransportKeys {
-    const val TRANSPORTS = "transports"
-    const val FACTS = "facts"
+    const val TRANSPORTS_COLLECTION = "transports"
+    const val FACTS_COLLECTION = "facts"
 
     const val STATE_NUMBER = "stateNumber"
     const val DRIVER_DATA = "driverData"

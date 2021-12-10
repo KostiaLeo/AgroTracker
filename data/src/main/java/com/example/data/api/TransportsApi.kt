@@ -17,18 +17,18 @@ interface TransportsApi {
 
 class FirebaseTransportsApi @Inject constructor() : TransportsApi {
     override fun loadPendingTransports(): Flow<QuerySnapshot> {
-        return Firebase.firestore.collection(TransportKeys.TRANSPORTS)
+        return Firebase.firestore.collection(TransportKeys.TRANSPORTS_COLLECTION)
             .whereEqualTo(TransportKeys.IN_PROCESS, true)
             .toSnapshotFlow()
     }
 
     override fun addFact(fact: Fact) {
-        Firebase.firestore.collection(TransportKeys.FACTS)
+        Firebase.firestore.collection(TransportKeys.FACTS_COLLECTION)
             .add(fact)
     }
 
     override fun updateTransport(id: String, vararg values: Pair<String, Any>) {
-        Firebase.firestore.document("${TransportKeys.TRANSPORTS}/$id")
+        Firebase.firestore.document("${TransportKeys.TRANSPORTS_COLLECTION}/$id")
             .update(hashMapOf(*values))
     }
 }
