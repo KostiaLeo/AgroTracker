@@ -14,13 +14,14 @@ class UploadDataWorkerLauncher @Inject constructor(
 
     companion object {
         private const val BACKOFF_DELAY_MS = 1000L
+        private const val UNIQUE_WORK_NAME = "uploadDataArgo"
     }
 
     override fun enqueueWork() {
-        workManager.enqueue(buildRequest())
+        workManager.enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, buildRequest())
     }
 
-    private fun buildRequest(): WorkRequest {
+    private fun buildRequest(): OneTimeWorkRequest {
         return OneTimeWorkRequestBuilder<UploadDataWorker>()
             .setConstraints(buildConstraints())
             .addTag(UploadDataWorker.TAG)
