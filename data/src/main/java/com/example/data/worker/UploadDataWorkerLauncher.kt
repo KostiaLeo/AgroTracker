@@ -14,11 +14,15 @@ class UploadDataWorkerLauncher @Inject constructor(
 
     companion object {
         private const val BACKOFF_DELAY_MS = 1000L
-        private const val UNIQUE_WORK_NAME = "uploadDataArgo"
+        private const val UNIQUE_UPLOAD_WORK_NAME = "uploadDataAgro"
     }
 
     override fun enqueueWork() {
-        workManager.enqueueUniqueWork(UNIQUE_WORK_NAME, ExistingWorkPolicy.KEEP, buildRequest())
+        workManager.enqueueUniqueWork(
+            UNIQUE_UPLOAD_WORK_NAME,
+            ExistingWorkPolicy.KEEP,
+            buildRequest()
+        )
     }
 
     private fun buildRequest(): OneTimeWorkRequest {
