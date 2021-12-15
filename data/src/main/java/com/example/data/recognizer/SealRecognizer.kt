@@ -5,6 +5,7 @@ import android.net.Uri
 import com.example.data.utils.Regexes.SEAL_NUMBER_REGEX
 import com.example.data.utils.await
 import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.text.Text
 import com.google.mlkit.vision.text.TextRecognition
 import com.google.mlkit.vision.text.latin.TextRecognizerOptions
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -34,9 +35,11 @@ class OfflineSealRecognizer @Inject constructor(
         val image = InputImage.fromFilePath(appContext, uri)
         val visionText = recognizer.process(image).await()
 
-        val elements =
-            visionText.textBlocks.flatMap { it.lines }.flatMap { it.elements }.map { it.text }
-        elements.find(::isValidNumber)
+        visionText.textBlocks
+            .flatMap(Text.TextBlock::getLines)
+            .flatMap(Text.Line::getElements)
+            .map(Text.Element::getText)
+            .find(::isValidNumber)
     }
 
     private fun isValidNumber(number: String): Boolean {
