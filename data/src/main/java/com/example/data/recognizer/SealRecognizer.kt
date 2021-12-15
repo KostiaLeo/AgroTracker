@@ -6,8 +6,7 @@ import com.example.data.utils.Regexes.SEAL_NUMBER_REGEX
 import com.example.data.utils.await
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
-import com.google.mlkit.vision.text.TextRecognition
-import com.google.mlkit.vision.text.latin.TextRecognizerOptions
+import com.google.mlkit.vision.text.TextRecognizer
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -19,10 +18,9 @@ interface SealRecognizer {
 }
 
 class OfflineSealRecognizer @Inject constructor(
-    @ApplicationContext private val appContext: Context
+    @ApplicationContext private val appContext: Context,
+    private val recognizer: TextRecognizer
 ) : SealRecognizer {
-
-    private val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
 
     /**
      * ML Kit recognizes all text on the picture and represents it as text blocks.
