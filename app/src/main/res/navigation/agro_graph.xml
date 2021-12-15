@@ -13,10 +13,10 @@
         <action
             android:id="@+id/action_transportList_to_transportDetails"
             app:destination="@id/transportDetailsFragment"
-            app:enterAnim="@animator/nav_default_enter_anim"
-            app:exitAnim="@animator/nav_default_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/fragment_enter_anim"
+            app:exitAnim="@anim/fragment_exit_anim"
+            app:popEnterAnim="@anim/fragment_pop_enter_anim"
+            app:popExitAnim="@anim/fragment_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/transportDetailsFragment"
@@ -29,10 +29,10 @@
         <action
             android:id="@+id/action_transportDetails_to_addSeal"
             app:destination="@id/addSealFragment"
-            app:enterAnim="@animator/nav_default_enter_anim"
-            app:exitAnim="@animator/nav_default_exit_anim"
-            app:popEnterAnim="@animator/nav_default_pop_enter_anim"
-            app:popExitAnim="@animator/nav_default_pop_exit_anim" />
+            app:enterAnim="@anim/fragment_enter_anim"
+            app:exitAnim="@anim/fragment_exit_anim"
+            app:popEnterAnim="@anim/fragment_pop_enter_anim"
+            app:popExitAnim="@anim/fragment_pop_exit_anim" />
     </fragment>
 
     <fragment
