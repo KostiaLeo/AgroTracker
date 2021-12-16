@@ -76,6 +76,7 @@ class TransportDetailsFragment : Fragment(R.layout.fragment_transport_details) {
 
     private fun observeData() {
         viewModel.sealsLiveData.observe(this) { seals ->
+            binding.submit.isEnabled = seals.isNotEmpty()
             sealsAdapter.submitList(seals)
         }
     }

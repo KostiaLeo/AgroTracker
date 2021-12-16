@@ -15,7 +15,7 @@ class TransportDetailsViewModel @Inject constructor(
     private val submitTransportUseCase: SubmitTransportUseCase
 ) : ViewModel() {
 
-    private val _sealsLiveData = MutableLiveData<List<Seal>>()
+    private val _sealsLiveData = MutableLiveData<List<Seal>>(emptyList())
     val sealsLiveData: LiveData<List<Seal>> get() = _sealsLiveData
 
     private val seals = mutableListOf<Seal>()
