@@ -35,12 +35,13 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
 
     private var photoUri: Uri? = null
 
+
     private var errorSnackBar: Snackbar? = null
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         initViews()
-        setupStateObservers()
+        observeState()
     }
 
     private fun initViews() {
@@ -69,7 +70,18 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         }
     }
 
-    private fun setupStateObservers() {
+    private fun setResult() {
+        setFragmentResult(
+            ResultKeys.CODE_ADD_SEAL,
+            bundleOf(
+                ResultKeys.SEAL_NUMBER to binding.sealNumberInput.text.toString(),
+                ResultKeys.SEAL_PHOTO_NAME to photoUri?.lastPathSegment
+            )
+        )
+    }
+
+
+    private fun observeState() {
         viewModel.recognitionStateLiveData.observe(this) { state ->
             when (state) {
                 is RecognitionState.Success -> {
@@ -88,14 +100,14 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
         }
     }
 
-    private fun setResult() {
-        setFragmentResult(
-            ResultKeys.CODE_ADD_SEAL,
-            bundleOf(
-                ResultKeys.SEAL_NUMBER to binding.sealNumberInput.text.toString(),
-                ResultKeys.SEAL_PHOTO_NAME to photoUri?.lastPathSegment
-            )
-        )
+    private fun showContent() {
+        binding.root.children.forEach { it.isVisible = true }
+        binding.progressBar.isVisible = false
+    }
+
+    private fun showProgress() {
+        binding.root.children.forEach { it.isVisible = false }
+        binding.progressBar.isVisible = true
     }
 
     private fun askToRetakePhoto() {
@@ -107,15 +119,5 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             scanSeal()
         }
         errorSnackBar?.show()
-    }
-
-    private fun showContent() {
-        binding.root.children.forEach { it.isVisible = true }
-        binding.progressBar.isVisible = false
-    }
-
-    private fun showProgress() {
-        binding.root.children.forEach { it.isVisible = false }
-        binding.progressBar.isVisible = true
     }
 }

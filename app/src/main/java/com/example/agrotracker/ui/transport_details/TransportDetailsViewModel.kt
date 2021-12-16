@@ -20,9 +20,18 @@ class TransportDetailsViewModel @Inject constructor(
 
     private val seals = mutableListOf<Seal>()
 
-    fun addSeal(sealNumber: String, photoName: String?) {
+    /**
+     * @return [true] if a seal was successfully added
+     * @return [false] if the seal has already been added before
+     * */
+    fun addSeal(sealNumber: String, photoName: String?): Boolean {
+        val isAlreadyAdded = seals.any { it.sealNumber == sealNumber }
+        if (isAlreadyAdded) return false
+
         seals.add(Seal(sealNumber, photoName))
         _sealsLiveData.value = seals
+
+        return true
     }
 
     fun submitTransport(transport: Transport) {
@@ -30,4 +39,3 @@ class TransportDetailsViewModel @Inject constructor(
         submitTransportUseCase(fact)
     }
 }
-

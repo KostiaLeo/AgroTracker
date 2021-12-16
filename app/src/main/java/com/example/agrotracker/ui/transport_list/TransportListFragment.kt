@@ -44,7 +44,7 @@ class TransportListFragment : Fragment(R.layout.fragment_list_transport) {
     }
 
     private fun initViews() {
-        binding.transportsRv.run {
+        with(binding.transportsRv) {
             adapter = transportsAdapter
             layoutManager = LinearLayoutManager(requireContext(), RecyclerView.VERTICAL, false)
             setHasFixedSize(true)

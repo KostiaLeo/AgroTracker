@@ -11,6 +11,7 @@
     <string name="available_transports">Доступні автомобілі</string>
     <string name="transport_info">Інформація про автомобіль</string>
     <string name="exit_confirmation">Ви впевнені, що хочете вийти?\nВся введена інформація буде втрачена</string>
+    <string name="seal_already_added">Дана пломба уже додана</string>
     <string name="yes">Так</string>
     <string name="no">Ні</string>
 
