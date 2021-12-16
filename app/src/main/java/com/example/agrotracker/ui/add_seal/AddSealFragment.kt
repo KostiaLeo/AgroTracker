@@ -17,6 +17,7 @@ import com.example.agrotracker.R
 import com.example.agrotracker.databinding.FragmentAddSealBinding
 import com.example.agrotracker.photo.PhotoTaker
 import com.example.agrotracker.utils.ResultKeys
+import com.example.agrotracker.utils.hideKeyboard
 import com.example.data.utils.Regexes
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +60,10 @@ class AddSealFragment : Fragment(R.layout.fragment_add_seal) {
             val matches = text?.matches(Regexes.SEAL_NUMBER_REGEX) == true
             binding.submit.isEnabled = matches
             binding.textField.error = if (matches) "" else getString(R.string.invalid_seal_number)
+        }
+
+        binding.root.setOnClickListener {
+            requireActivity().hideKeyboard()
         }
     }
 
