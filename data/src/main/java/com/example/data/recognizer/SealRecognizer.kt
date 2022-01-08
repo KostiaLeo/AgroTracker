@@ -34,6 +34,7 @@ class OfflineSealRecognizer @Inject constructor(
         val visionText = recognizer.process(image).await()
 
         visionText.textBlocks
+            .asSequence()
             .flatMap(Text.TextBlock::getLines)
             .flatMap(Text.Line::getElements)
             .map(Text.Element::getText)
