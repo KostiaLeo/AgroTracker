@@ -2,6 +2,7 @@ package com.example.data.recognizer
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import com.example.data.utils.Regexes.SEAL_NUMBER_REGEX
 import com.example.data.utils.await
 import com.google.mlkit.vision.common.InputImage
@@ -17,6 +18,8 @@ interface SealRecognizer {
     fun close()
 }
 
+private const val TAG = "SealRecognizer"
+
 class OfflineSealRecognizer @Inject constructor(
     @ApplicationContext private val appContext: Context,
     private val recognizer: TextRecognizer
@@ -30,8 +33,8 @@ class OfflineSealRecognizer @Inject constructor(
      * @return recognized seal number that matches [SEAL_NUMBER_REGEX] or [null] if a suitable number wasn't detected.
      * */
     override suspend fun recognize(uri: Uri): String? = withContext(Dispatchers.Default) {
-        val image = InputImage.fromFilePath(appContext, uri)
-        val visionText = recognizer.process(image).await()
+        val image = resolveInputImage(uri) ?: return@withContext null
+        val visionText = recognizeText(image) ?: return@withContext null
 
         visionText.textBlocks
             .asSequence()
@@ -45,6 +48,23 @@ class OfflineSealRecognizer @Inject constructor(
         return number.matches(SEAL_NUMBER_REGEX)
     }
 
+    private fun resolveInputImage(uri: Uri): InputImage? {
+        return try {
+            InputImage.fromFilePath(appContext, uri)
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed resolving InputImage due to: ${e.localizedMessage}", e)
+            null
+        }
+    }
+
+    private suspend fun recognizeText(image: InputImage): Text? {
+        return try {
+            recognizer.process(image).await()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed resolving InputImage due to: ${e.localizedMessage}", e)
+            null
+        }
+    }
 
     override fun close() {
         recognizer.close()
