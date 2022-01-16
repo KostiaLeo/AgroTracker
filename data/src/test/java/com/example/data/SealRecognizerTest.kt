@@ -8,8 +8,6 @@ import com.example.data.SealRecognizerTestUtils.mockErrorTextRecognizer
 import com.example.data.SealRecognizerTestUtils.mockSuccessInputImage
 import com.example.data.SealRecognizerTestUtils.mockSuccessTextRecognizer
 import com.example.data.recognizer.OfflineSealRecognizer
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text
@@ -32,8 +30,6 @@ class SealRecognizerTest {
 
     private lateinit var sealRecognizer: OfflineSealRecognizer
 
-    private val testUri = Uri.EMPTY
-
     @Before
     fun setUp() {
         MockKAnnotations.init(this)
@@ -44,7 +40,6 @@ class SealRecognizerTest {
     fun `test success recognition from 3 elements`() = runBlocking {
         val expectedResult = "A11111111"
         val mockText = buildMockText("B09", "0398jdpcw0ev-", expectedResult)
-
         val image = mockk<InputImage>()
         mockSuccessInputImage(image)
         mockSuccessTextRecognizer(textRecognizer, mockText)
@@ -60,7 +55,6 @@ class SealRecognizerTest {
         val expectedResult = "A11111111"
         val mockText =
             buildMockText("B09", "0398jdpcw0ev-", expectedResult, "B00000000", "C12341234")
-
         val image = mockk<InputImage>()
         mockSuccessInputImage(image)
         mockSuccessTextRecognizer(textRecognizer, mockText)
@@ -74,7 +68,6 @@ class SealRecognizerTest {
     @Test
     fun `test no suitable items`() = runBlocking {
         val mockText = buildMockText("B09", "0398jdpcw0ev-", "A1111")
-
         val image = mockk<InputImage>()
         mockSuccessInputImage(image)
         mockSuccessTextRecognizer(textRecognizer, mockText)
@@ -88,7 +81,6 @@ class SealRecognizerTest {
     @Test
     fun `test no items`() = runBlocking {
         val mockText = buildMockText()
-
         val image = mockk<InputImage>()
         mockSuccessInputImage(image)
         mockSuccessTextRecognizer(textRecognizer, mockText)
@@ -104,7 +96,6 @@ class SealRecognizerTest {
         mockkStatic(InputImage::class)
         val exception = Exception("Error")
         every { InputImage.fromFilePath(any(), any()) } throws exception
-
         mockkStatic(Log::class)
 
         val actual = sealRecognizer.recognize(testUri)
@@ -121,9 +112,7 @@ class SealRecognizerTest {
         val image = mockk<InputImage>()
         mockSuccessInputImage(image)
         mockkStatic(Log::class)
-
-        val exception = Exception("Error")
-        mockErrorTextRecognizer(textRecognizer, exception)
+        mockErrorTextRecognizer(textRecognizer, Exception("Error"))
 
         val actual = sealRecognizer.recognize(testUri)
         assertNull(actual)
@@ -142,29 +131,11 @@ object SealRecognizerTestUtils {
     }
 
     fun mockSuccessTextRecognizer(textRecognizer: TextRecognizer, resultText: Text) {
-        val mockTask = mockk<Task<Text>>(relaxed = true)
-        val slot = slot<OnSuccessListener<Text>>()
-        every {
-            mockTask.addOnSuccessListener(capture(slot))
-        } answers {
-            slot.captured.onSuccess(resultText)
-            mockTask
-        }
-
-        every { textRecognizer.process(any<InputImage>()) } returns mockTask
+        every { textRecognizer.process(any<InputImage>()) } returns mockTask(resultText)
     }
 
     fun mockErrorTextRecognizer(textRecognizer: TextRecognizer, exception: Exception) {
-        val mockTask = mockk<Task<Text>>(relaxed = true)
-        val slot = slot<OnFailureListener>()
-        every {
-            mockTask.addOnFailureListener(capture(slot))
-        } answers {
-            slot.captured.onFailure(exception)
-            mockTask
-        }
-
-        every { textRecognizer.process(any<InputImage>()) } returns mockTask
+        every { textRecognizer.process(any<InputImage>()) } returns mockTask<Task<Text>, Text>(error = exception)
     }
 
     fun buildMockText(vararg elements: String): Text {

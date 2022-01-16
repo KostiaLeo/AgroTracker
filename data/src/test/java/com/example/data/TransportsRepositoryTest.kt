@@ -65,10 +65,8 @@ class TransportsRepositoryTest {
 
         verifyOrder {
             photosStorage.addPendingPhotos(listOf("photoname1"))
-
             transportsApi.addFact(expected)
             transportsApi.updateTransport(expected.transportId, IN_PROCESS to false)
-
             uploadDataLauncher.enqueueWork()
         }
     }

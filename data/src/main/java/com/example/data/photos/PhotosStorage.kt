@@ -1,8 +1,6 @@
 package com.example.data.photos
 
-import android.content.Context
 import android.content.SharedPreferences
-import android.os.Environment
 import android.util.Log
 import androidx.core.content.edit
 import androidx.core.net.toUri
@@ -11,7 +9,6 @@ import com.example.data.utils.TIMESTAMP_DATE_FORMAT
 import com.example.data.utils.await
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
@@ -36,10 +33,8 @@ interface PhotosStorage {
 @Singleton
 class PreferencesPhotosStorage @Inject constructor(
     private val sharedPreferences: SharedPreferences,
-    @ApplicationContext applicationContext: Context
+    private val storageDir: File
 ) : PhotosStorage, ImageFileCreator, PhotosUploader {
-
-    private val storageDir = applicationContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
     private val errorHandler = CoroutineExceptionHandler { _, throwable ->
         logError(throwable)
