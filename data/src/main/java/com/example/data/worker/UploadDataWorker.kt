@@ -43,7 +43,7 @@ class UploadDataWorker @AssistedInject constructor(
 
     private suspend fun awaitWritesToFirestore() {
         with(Firebase.firestore) {
-            enableNetwork()
+            enableNetwork().await()
             waitForPendingWrites().await()
         }
     }
