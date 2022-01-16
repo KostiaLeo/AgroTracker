@@ -8,6 +8,8 @@ import com.example.data.SealRecognizerTestUtils.mockErrorTextRecognizer
 import com.example.data.SealRecognizerTestUtils.mockSuccessInputImage
 import com.example.data.SealRecognizerTestUtils.mockSuccessTextRecognizer
 import com.example.data.recognizer.OfflineSealRecognizer
+import com.example.data.utils.mockTask
+import com.example.data.utils.testUri
 import com.google.android.gms.tasks.Task
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.text.Text

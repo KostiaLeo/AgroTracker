@@ -1,4 +1,4 @@
-package com.example.data
+package com.example.data.utils
 
 import android.net.Uri
 import com.google.android.gms.tasks.OnFailureListener

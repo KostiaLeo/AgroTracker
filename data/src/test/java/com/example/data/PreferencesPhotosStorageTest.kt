@@ -2,13 +2,15 @@ package com.example.data
 
 import android.content.SharedPreferences
 import android.net.Uri
+import android.util.Log
 import com.example.data.photos.PreferencesPhotosStorage
+import com.example.data.utils.FirebaseTestUtils
 import com.example.data.utils.SharedPreferencesKeys
-import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import com.example.data.utils.mockTask
 import io.mockk.*
 import io.mockk.impl.annotations.MockK
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.core.StringStartsWith.startsWith
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -79,13 +81,13 @@ class PreferencesPhotosStorageTest {
         }
     }
 
+
     @Test
     fun `test success uploading photos`() = runBlocking {
-        val fileName1 = "photo1"
-        val fileName2 = "photo2"
+        val (fileName1, fileName2) = "photo1" to "photo2"
         every { sharedPreferences.getStringSet(eq(key), any()) } returns setOf(fileName1, fileName2)
         val fileUris = mockSuccessFilesUri(fileName1, fileName2)
-        val mockStorageReference = mockSuccessFirebaseStorage()
+        val mockStorageReference = FirebaseTestUtils.mockSuccessFirebaseStorage()
 
         photosStorage.uploadPendingPhotos()
 
@@ -101,6 +103,90 @@ class PreferencesPhotosStorageTest {
         }
     }
 
+    @Test
+    fun `test 2 out of 3 success uploading`() = runBlocking {
+        val fileName1 = "photo1"
+        val fileName2 = "photo2"
+        val fileName3 = "photo3"
+        every { sharedPreferences.getStringSet(eq(key), any()) } returns setOf(
+            fileName1,
+            fileName2,
+            fileName3
+        )
+        val fileUris = mockSuccessFilesUri(fileName1, fileName2, fileName3)
+        val mockStorageReference = FirebaseTestUtils.mockSuccessFirebaseStorage()
+        // mock failed uploading of 3rd image
+        every { mockStorageReference.putFile(fileUris[2]) } returns mockTask(
+            error = IllegalStateException(
+                "error uploading photo"
+            )
+        )
+        mockkStatic(Log::class)
+
+        photosStorage.uploadPendingPhotos()
+
+        verify { sharedPreferences.getStringSet(key, emptySet()) }
+        verify { sharedPreferencesEditor.putStringSet(key, setOf(fileName3)) }
+        listOf(fileName1, fileName2, fileName3).forEachIndexed { index, fileName ->
+            verifyOrder {
+                mockStorageReference.child(fileName)
+                mockStorageReference.putFile(fileUris[index])
+            }
+        }
+        verify { Log.e(any(), any(), any<IllegalStateException>()) }
+    }
+
+    @Test
+    fun `test no success uploading`() = runBlocking {
+        val fileName1 = "photo1"
+        val fileName2 = "photo2"
+        val fileName3 = "photo3"
+        every { sharedPreferences.getStringSet(eq(key), any()) } returns setOf(
+            fileName1,
+            fileName2,
+            fileName3
+        )
+        val fileUris = mockSuccessFilesUri(fileName1, fileName2, fileName3)
+        val mockStorageReference = FirebaseTestUtils.mockSuccessFirebaseStorage()
+        // mock failed uploading of all images
+        every { mockStorageReference.putFile(any()) } returns mockTask(
+            error = IllegalStateException(
+                "error uploading photo"
+            )
+        )
+        mockkStatic(Log::class)
+
+        photosStorage.uploadPendingPhotos()
+
+        verify { sharedPreferences.getStringSet(key, emptySet()) }
+        verify { sharedPreferencesEditor.putStringSet(key, setOf(fileName1, fileName2, fileName3)) }
+        listOf(fileName1, fileName2, fileName3).forEachIndexed { index, fileName ->
+            verifyOrder {
+                mockStorageReference.child(fileName)
+                mockStorageReference.putFile(fileUris[index])
+            }
+        }
+        verify(exactly = 3) { Log.e(any(), any(), any<IllegalStateException>()) }
+    }
+
+
+    @Test
+    fun `test creating an image file`() {
+        mockkStatic(File::class)
+        every { File.createTempFile(any(), any(), any()) } returns mockk()
+
+        val file = photosStorage.createImageFile()
+
+        verify {
+            File.createTempFile(
+                match(startsWith("JPEG_")::matches),
+                eq(".jpg"),
+                eq(storageDir)
+            )
+        }
+    }
+
+
     private fun mockSuccessFilesUri(vararg photoNames: String): List<Uri> {
         mockkStatic(Uri::class)
 
@@ -110,19 +196,5 @@ class PreferencesPhotosStorageTest {
             every { Uri.fromFile(file) } returns uri
             uri
         }
-    }
-
-    private fun mockSuccessFirebaseStorage(): StorageReference {
-        val mockStorageReference = mockk<StorageReference>(relaxed = true)
-        every { mockStorageReference.child(any()) } returns mockStorageReference
-        every { mockStorageReference.putFile(any()) } returns mockTask(result = mockk())
-
-        val mockFirebaseStorage = mockk<FirebaseStorage>(relaxed = true)
-        every { mockFirebaseStorage.reference } returns mockStorageReference
-
-        mockkStatic(FirebaseStorage::class)
-        every { FirebaseStorage.getInstance() } returns mockFirebaseStorage
-
-        return mockStorageReference
     }
 }
